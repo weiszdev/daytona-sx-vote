@@ -9,7 +9,6 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ccjdub.github.io/daytona-sx-vote/RevMX_Predictions.html">
@@ -994,7 +993,26 @@
             html += '<div class="past-race-card">';
             html += '<div class="past-race-name">' + (race.name || 'Race') + '</div>';
             html += '<div class="past-race-date">' + formatRaceDate(race.date) + ' \u2014 ' + (race.track || '') + '</div>';
-            html += '<div class="past-race-winner">\uD83C\uDFC1 Winner: ' + winner + '</div>';
+            // Top 5 Results section
+            if (race.top5Results && race.top5Results.length > 0) {
+              html += '<div class="top5-results-section" style="margin:12px 0;">';
+              html += '<div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#ff6600;margin-bottom:8px;font-weight:600;">Race Results</div>';
+              race.top5Results.forEach(function(rider, idx) {
+                var pos = idx + 1;
+                var isFirst = pos === 1;
+                var medalColor = pos === 1 ? '#FFD700' : pos === 2 ? '#C0C0C0' : pos === 3 ? '#CD7F32' : '#666';
+                var bgColor = isFirst ? 'rgba(255,215,0,0.08)' : 'rgba(255,255,255,0.03)';
+                var borderLeft = isFirst ? '3px solid #FFD700' : pos === 2 ? '3px solid #C0C0C0' : pos === 3 ? '3px solid #CD7F32' : '3px solid #444';
+                html += '<div style="display:flex;align-items:center;padding:6px 10px;margin-bottom:2px;background:' + bgColor + ';border-left:' + borderLeft + ';border-radius:0 6px 6px 0;">';
+                html += '<span style="font-size:14px;font-weight:700;color:' + medalColor + ';min-width:28px;">' + pos + '.</span>';
+                html += '<span style="font-size:14px;color:' + (isFirst ? '#FFD700' : '#ccc') + ';font-weight:' + (isFirst ? '700' : '400') + ';">' + rider + '</span>';
+                if (isFirst) html += '<span style="margin-left:8px;font-size:12px;">&#127937;</span>';
+                html += '</div>';
+              });
+              html += '</div>';
+            } else {
+              html += '<div class="past-race-winner">\uD83C\uDFC1 Winner: ' + winner + '</div>';
+            }
 
             // Fan vote breakdown
             if (race.fanVotes && race.totalVotes > 0) {
