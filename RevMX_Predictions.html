@@ -1677,5 +1677,29 @@
     loadNextRace();
   }, 1500);
 </script>
+<!-- iframe auto-height: tell parent our content height -->
+<script>
+(function() {
+  function reportHeight() {
+    var h = document.documentElement.scrollHeight;
+    window.parent.postMessage({ type: 'revmx-iframe-height', height: h }, '*');
+  }
+  window.addEventListener('load', function() {
+    reportHeight();
+    setTimeout(reportHeight, 500);
+    setTimeout(reportHeight, 1500);
+    setTimeout(reportHeight, 3000);
+  });
+  window.addEventListener('resize', reportHeight);
+  document.addEventListener('click', function() {
+    setTimeout(reportHeight, 100);
+    setTimeout(reportHeight, 500);
+  });
+  var observer = new MutationObserver(function() {
+    setTimeout(reportHeight, 100);
+  });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+})();
+</script>
 </body>
 </html>
