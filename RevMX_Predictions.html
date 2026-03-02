@@ -682,14 +682,27 @@
   // Initialize votes object
   Object.keys(riders).forEach(key => { votes[key] = 0; });
 
+  var votingOpen = true;
+
   // Load live votes from Google Sheets API
   function loadVotes() {
     fetch(VOTE_API + '?action=votes&raceId=' + currentRaceId)
       .then(r => r.json())
       .then(data => {
-        votes = data || votes;
+        // New format: { votes: {...}, votingOpen: bool, closedReason: string }
+        if (data && data.votes) {
+          votes = data.votes;
+          votingOpen = data.votingOpen !== false;
+        } else {
+          // Fallback for old format (plain votes object)
+          votes = data || votes;
+        }
         if (document.getElementById('stepResult').classList.contains('active')) {
           renderTally();
+        }
+        // If voting is closed, show a notice
+        if (!votingOpen) {
+          showVotingClosed(data.closedReason || 'Voting is closed for this race');
         }
       })
       .catch(e => {
@@ -698,8 +711,24 @@
       });
   }
 
+  // Show voting closed banner
+  function showVotingClosed(reason) {
+    var existing = document.getElementById('votingClosedBanner');
+    if (existing) return; // Already shown
+    var banner = document.createElement('div');
+    banner.id = 'votingClosedBanner';
+    banner.style.cssText = 'background:linear-gradient(135deg,#331100,#221100);border:1px solid #ff4400;border-radius:8px;padding:12px 16px;margin:10px auto;max-width:400px;text-align:center;color:#ff6600;font-weight:700;font-size:14px;letter-spacing:1px;';
+    banner.innerHTML = '&#128274; ' + reason;
+    var container = document.querySelector('.container');
+    if (container) container.insertBefore(banner, container.children[2]);
+  }
+
   // Send vote to Google Sheets API
   function sendVote(riderKey) {
+    if (!votingOpen) {
+      alert('Voting is closed for this race.');
+      return;
+    }
     fetch(VOTE_API, {
       method: 'POST',
       body: JSON.stringify({
@@ -713,7 +742,18 @@
       headers: { 'Content-Type': 'text/plain' }
     })
     .then(r => r.json())
-    .then(data => { votes = data; renderTally(); })
+    .then(data => {
+      if (data && data.votes) {
+        votes = data.votes;
+        votingOpen = data.votingOpen !== false;
+        if (data.error) {
+          console.log('Vote response:', data.error);
+        }
+      } else {
+        votes = data;
+      }
+      renderTally();
+    })
     .catch(e => {
       votes[riderKey] = (votes[riderKey] || 0) + 1;
       renderTally();
@@ -840,6 +880,15 @@
     if (section === 'next') loadNextRace();
   }
 
+  function formatRaceDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+      var d = new Date(dateStr);
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    } catch(e) { return dateStr; }
+  }
+
   function loadPastRaces() {
     fetch(VOTE_API + '?action=races&status=completed')
       .then(r => r.json())
@@ -847,10 +896,11 @@
         let html = '';
         if (data && data.length) {
           data.forEach(race => {
+            var winner = race.winner || race.actualWinner || 'TBD';
             html += '<div class="past-race-card">';
             html += '<div class="past-race-name">' + (race.name || 'Race') + '</div>';
-            html += '<div class="past-race-date">' + (race.date || '') + '</div>';
-            html += '<div class="past-race-winner">Winner: ' + (race.winner || 'TBD') + '</div>';
+            html += '<div class="past-race-date">' + formatRaceDate(race.date) + ' — ' + (race.track || '') + '</div>';
+            html += '<div class="past-race-winner">Winner: ' + winner + '</div>';
             if (race.topVote) {
               html += '<div class="past-race-stats">Top pick: ' + race.topVote + ' with ' + (race.topVoteCount || 0) + ' votes</div>';
             }
