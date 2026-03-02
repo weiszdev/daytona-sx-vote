@@ -776,6 +776,8 @@
   Object.keys(riders).forEach(key => { votes[key] = 0; });
 
   var votingOpen = true;
+  var pastRacesLoaded = false;
+  var nextRaceLoaded = false;
 
   // Load live votes from Google Sheets API
   function loadVotes() {
@@ -982,10 +984,12 @@
     } catch(e) { return dateStr; }
   }
 
-  function loadPastRaces() {
+  function loadPastRaces(force) {
+    if (pastRacesLoaded && !force) return;
     fetch(VOTE_API + '?action=races&status=completed')
       .then(r => r.json())
       .then(data => {
+        pastRacesLoaded = true;
         let html = '';
         if (data && data.length) {
           data.forEach(race => {
@@ -1065,11 +1069,13 @@
       });
   }
 
-  function loadNextRace() {
+  function loadNextRace(force) {
+    if (nextRaceLoaded && !force) return;
     // Fetch all races and find the next upcoming one by date
     fetch(VOTE_API + '?action=races&status=all')
       .then(r => r.json())
       .then(data => {
+        nextRaceLoaded = true;
         let html = '';
         if (!data || !Array.isArray(data) || data.length === 0) {
           html = '<div style="text-align:center;color:#888;padding:20px;">Check back soon for next race details</div>';
@@ -1298,6 +1304,12 @@
   loadVotes();
   setInterval(loadVotes, 10000);
   checkVerifyToken();
+
+  // Preload other tabs in the background after main content loads
+  setTimeout(function() {
+    loadPastRaces();
+    loadNextRace();
+  }, 1500);
 </script>
 </body>
 </html>
