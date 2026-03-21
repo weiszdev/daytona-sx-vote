@@ -875,6 +875,11 @@
 
 <div class="container">
   <div class="racing-stripe"></div>
+    <!-- Visitor Counter -->
+    <div style="text-align:center; padding:8px 0 4px; font-family:'Rajdhani',sans-serif; font-size:14px; color:#777; letter-spacing:1.5px; text-transform:uppercase;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:5px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <span id="visitCount" style="color:#ff6b35; font-weight:700; font-family:'Orbitron',sans-serif; font-size:13px;">52,219</span> site visits
+    </div>
 
   <!-- Logo + branding -->
   <div class="logo-row">
@@ -1103,11 +1108,6 @@
   <div class="footer">RevMX &#215; Moto Music &#215; Supercross 2026</div>
 </div>
 
-    <!-- Visitor Counter -->
-    <div style="text-align:center; padding:12px 0 20px; font-family:'Rajdhani',sans-serif; font-size:15px; color:#777; letter-spacing:1.5px; text-transform:uppercase;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-      <span id="visitCount" style="color:#ff6b35; font-weight:700; font-family:'Orbitron',sans-serif; font-size:14px;">52,219</span> site visits
-    </div>
 
 <script>
     // === VISITOR COUNTER ===
@@ -1182,9 +1182,7 @@
           // Fallback for old format (plain votes object)
           votes = data || votes;
         }
-        if (document.getElementById('stepResult').classList.contains('active')) {
           renderTally();
-        }
         // If voting is closed, show a notice
         if (!votingOpen) {
           showVotingClosed(data.closedReason || 'Voting is closed for this race');
