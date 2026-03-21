@@ -1099,8 +1099,49 @@
 
   <div class="footer">RevMX &#215; Moto Music &#215; Supercross 2026</div>
 </div>
+    <!-- Visitor Counter -->
+    <div class="visitor-counter">
+      <span class="counter-icon">👁</span>
+      <span id="visitCount">52,219</span> site visits
+    </div>
+    <style>
+      .visitor-counter {
+        text-align: center;
+        padding: 12px 0 18px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 15px;
+        color: #777;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+      .visitor-counter .counter-icon {
+        margin-right: 6px;
+        font-size: 16px;
+      }
+      #visitCount {
+        color: #ff6b35;
+        font-weight: 700;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 14px;
+      }
+    </style>
 
 <script>
+    // === VISITOR COUNTER ===
+    (function() {
+      var BASE = 52219;
+      var key = 'revmx_visit_total';
+      var stored = localStorage.getItem(key);
+      var count;
+      if (stored) {
+        count = parseInt(stored) + 1;
+      } else {
+        count = BASE;
+      }
+      localStorage.setItem(key, count);
+      var el = document.getElementById('visitCount');
+      if (el) el.textContent = count.toLocaleString();
+    })();
   // ===== RACE CONFIGURATION =====
   const RACE_CONFIG = {
     'birmingham-sx-2026': {
