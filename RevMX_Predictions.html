@@ -40,13 +40,16 @@
     font-weight: 700;
     background: #0a0a0a;
     color: #fff;
-    min-height: 100vh;
+    min-height: 100vh; min-height: -webkit-fill-available;
     overflow-x: hidden;
-  }
+        -webkit-overflow-scrolling: touch;
+        -webkit-text-size-adjust: 100%;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+      }
 
   body::before {
     content: '';
-    position: fixed;
+    position: fixed; -webkit-backface-visibility: hidden; backface-visibility: hidden; will-change: transform;
     top: 0; left: 0; right: 0; bottom: 0;
     background: repeating-conic-gradient(#111 0% 25%, transparent 0% 50%) 0 0 / 40px 40px;
     opacity: 0.15;
@@ -59,7 +62,7 @@
     max-width: 480px;
     margin: 0 auto;
     padding: 20px 16px;
-    min-height: 100vh;
+    min-height: 100vh; min-height: -webkit-fill-available;
     display: flex;
     flex-direction: column;
   }
@@ -1099,32 +1102,12 @@
 
   <div class="footer">RevMX &#215; Moto Music &#215; Supercross 2026</div>
 </div>
+
     <!-- Visitor Counter -->
-    <div class="visitor-counter">
-      <span class="counter-icon">👁</span>
-      <span id="visitCount">52,219</span> site visits
+    <div style="text-align:center; padding:12px 0 20px; font-family:'Rajdhani',sans-serif; font-size:15px; color:#777; letter-spacing:1.5px; text-transform:uppercase;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+      <span id="visitCount" style="color:#ff6b35; font-weight:700; font-family:'Orbitron',sans-serif; font-size:14px;">52,219</span> site visits
     </div>
-    <style>
-      .visitor-counter {
-        text-align: center;
-        padding: 12px 0 18px;
-        font-family: 'Rajdhani', sans-serif;
-        font-size: 15px;
-        color: #777;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-      }
-      .visitor-counter .counter-icon {
-        margin-right: 6px;
-        font-size: 16px;
-      }
-      #visitCount {
-        color: #ff6b35;
-        font-weight: 700;
-        font-family: 'Orbitron', sans-serif;
-        font-size: 14px;
-      }
-    </style>
 
 <script>
     // === VISITOR COUNTER ===
