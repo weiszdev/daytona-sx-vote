@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Daytona SX — Pick Your Winner | REVMX</title>
+<title>Birmingham SX — Pick Your Winner | REVMX</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
 
@@ -228,7 +228,7 @@
     </div>
   </div>
 
-  <h1>Daytona SX</h1>
+  <h1>Birmingham SX</h1>
   <div class="subtitle">Who's Taking the Checkers?</div>
 
   <!-- Progress -->
@@ -305,7 +305,7 @@
       </div>
       <div class="prediction-card" data-pred="Survives the chaos — last man standing" role="button" tabindex="0">
         <div class="prediction-icon">&#128128;</div>
-        <div><div class="prediction-text">Chaos Survivor</div><div class="prediction-sub">Last one standing in Daytona carnage</div></div>
+        <div><div class="prediction-text">Chaos Survivor</div><div class="prediction-sub">Last one standing in Birmingham carnage</div></div>
       </div>
     </div>
     <button class="btn btn-primary" id="btn3" disabled>Submit My Pick</button>
@@ -316,7 +316,7 @@
     <div class="result-card">
       <div class="result-inner">
         <div class="result-flag">&#127937;</div>
-        <div class="result-pick">Your Pick to Win Daytona</div>
+        <div class="result-pick">Your Pick to Win Birmingham</div>
         <div class="result-name" id="resultName"></div>
         <div class="result-number" id="resultNumber"></div>
         <div class="result-stats">
@@ -338,13 +338,13 @@
     <button class="btn btn-restart" id="btnRestart">Pick Again</button>
   </div>
 
-  <div class="footer">REVMX &#215; Moto Music &#215; Daytona SX 2026</div>
+  <div class="footer">REVMX &#215; Moto Music &#215; Birmingham SX 2026</div>
 </div>
 
 <script>
   // ===== LIVE VOTE STORAGE via Google Sheets + Apps Script =====
   const VOTE_API = 'https://script.google.com/macros/s/AKfycbyLDr5uRDwbheTOJPlghcRpbsEkCBuLpDYwdG1c0BXfXpYpovM-YsvR5KDdEjT_7IQW/exec';
-  const STORAGE_KEY = 'daytona_sx_2026_vote';
+  const STORAGE_KEY = 'birmingham_sx_2026_vote';
   const riders = {
     tomac:    { name: 'Eli Tomac',        number: '#3',  color: '#ff6600' },
     lawrence: { name: 'Hunter Lawrence',  number: '#96', color: '#ff0000' },
@@ -542,9 +542,9 @@
   }
 
   function copyResult() {
-    const text = '\u{1F3C1} My Daytona SX Pick: ' + selectedRider + ' ' + selectedNumber +
+    const text = '\u{1F3C1} My Birmingham SX Pick: ' + selectedRider + ' ' + selectedNumber +
       ' | ' + predShort + ' | ' + confidence + '% confident\n' + prediction +
-      '\n\nCast your vote: ' + window.location.href + '\n#DaytonaSX #Supercross #REVMX';
+      '\n\nCast your vote: ' + window.location.href + '\n#BirminghamSX #Supercross #REVMX';
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.querySelector('#stepResult .btn-primary');
       btn.textContent = 'Copied!';
