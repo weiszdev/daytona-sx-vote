@@ -234,19 +234,19 @@
   /* Buttons */
   .btn { display: block; width: 100%; padding: 16px; border: none; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; margin-top: 20px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-appearance: none; }
   .btn-primary { background: linear-gradient(135deg, #ff0000, #ff4400); color: #fff; box-shadow: 0 4px 20px rgba(255,68,0,0.3); }
-  .btn-primary:hover { box-shadow: 0 4px 30px rgba(255,68,0,0.6); transform: translateY(-2px); }
+  .btn-primary:hover { box-shadow: 0 4px 30px rgba(0,204,68,0.7); transform: translateY(-2px); }
   .btn-primary:disabled { background: #333; color: #666; box-shadow: none; cursor: not-allowed; transform: none; }
 
   /* Results */
-  .result-card { background: linear-gradient(135deg, #111 0%, #0a0a0a 100%); border: 2px solid #ff4400; border-radius: 12px; padding: 30px 24px; text-align: center; margin: 20px 0; position: relative; overflow: hidden; }
+  .result-card { background: linear-gradient(135deg, #111 0%, #0a0a0a 100%); border: 2px solid #ff4400; border-radius: 12px; padding: 18px 18px; text-align: center; margin: 14px 0; position: relative; overflow: hidden; }
   .result-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent, rgba(255,68,0,0.05), transparent, rgba(255,68,0,0.05)); animation: spin 8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .result-inner { position: relative; z-index: 1; }
-  .result-flag { font-size: 48px; margin-bottom: 12px; }
-  .result-pick { font-family: 'Orbitron', monospace; font-size: 14px; color: #ff4400; letter-spacing: 3px; margin-bottom: 8px; }
-  .result-name { font-family: 'Orbitron', monospace; font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 4px; }
-  .result-number { font-family: 'Orbitron', monospace; font-size: 18px; color: #888; margin-bottom: 20px; }
-  .result-stats { display: flex; justify-content: center; gap: 24px; margin-top: 16px; }
+  .result-flag { font-size: 32px; margin-bottom: 6px; }
+  .result-pick { font-family: 'Orbitron', monospace; font-size: 14px; color: #ff4400; letter-spacing: 2px; margin-bottom: 4px; }
+  .result-name { font-family: 'Orbitron', monospace; font-size: 26px; font-weight: 900; text-transform: uppercase; margin-bottom: 4px; }
+  .result-number { font-family: 'Orbitron', monospace; font-size: 18px; color: #888; margin-bottom: 10px; }
+  .result-stats { display: flex; justify-content: center; gap: 16px; margin-top: 8px; }
   .stat-box { text-align: center; }
   .stat-value { font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900; color: #ff4400; }
   .stat-label { font-size: 10px; color: #666; letter-spacing: 2px; text-transform: uppercase; }
@@ -368,9 +368,12 @@
   }
 
   .btn-email-signup {
-    background: linear-gradient(135deg, #ff0000, #ff4400);
+    background: linear-gradient(135deg, #00cc44, #00e650);
     color: #fff;
-    box-shadow: 0 4px 20px rgba(255,68,0,0.3);
+    box-shadow: 0 4px 20px rgba(0,204,68,0.4);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
     margin-top: 0;
     width: 100%;
   }
