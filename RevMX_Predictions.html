@@ -893,7 +893,7 @@
     </div>
   </div>
 
-  <h1 id="pageTitle">Indianapolis SX</h1>
+  <h1 id="pageTitle">Birmingham SX</h1>
   <div class="subtitle" id="pageSubtitle">Who's Taking the Checkers?</div>
 
   <!-- Navigation pills -->
@@ -1103,11 +1103,11 @@
 <script>
   // ===== RACE CONFIGURATION =====
   const RACE_CONFIG = {
-    'indianapolis-sx-2026': {
-      id: 'indianapolis-sx-2026',
-      title: 'Indianapolis SX',
+    'birmingham-sx-2026': {
+      id: 'birmingham-sx-2026',
+      title: 'Birmingham SX',
       subtitle: "Who's Taking the Checkers?",
-      date: '2026-03-08',
+      date: '2026-03-22',
       location: 'Lucas Oil Stadium',
       riders: {
         tomac:    { name: 'Eli Tomac',        number: '#3',  color: '#ff6600' },
@@ -1121,10 +1121,10 @@
   // ===== LIVE VOTE STORAGE via Google Sheets + Apps Script =====
   const VOTE_API = 'https://script.google.com/macros/s/AKfycbxPEWS7kLCJIDNDQ2ibGJXTCXThDarPUcElcUOOKaU9H1GbGyx0a9fkLQnlGdnRPSx4/exec';
 
-  // Get current race from URL param, default to indianapolis-sx-2026
+  // Get current race from URL param, default to birmingham-sx-2026
   const urlParams = new URLSearchParams(window.location.search);
-  const currentRaceId = urlParams.get('race') || 'indianapolis-sx-2026';
-  const raceConfig = RACE_CONFIG[currentRaceId] || RACE_CONFIG['indianapolis-sx-2026'];
+  const currentRaceId = urlParams.get('race') || 'birmingham-sx-2026';
+  const raceConfig = RACE_CONFIG[currentRaceId] || RACE_CONFIG['birmingham-sx-2026'];
   const riders = raceConfig.riders;
   const STORAGE_KEY = 'revmx_vote_' + currentRaceId;
 
