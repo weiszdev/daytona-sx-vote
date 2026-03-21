@@ -1153,7 +1153,7 @@
         // New format: { votes: {...}, votingOpen: bool, closedReason: string }
         if (data && data.votes) {
           votes = data.votes;
-          votingOpen = data.votingOpen !== false;
+          votingOpen = true; // force open for Birmingham SX
         } else {
           // Fallback for old format (plain votes object)
           votes = data || votes;
