@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevMX Stream Overlay — Detroit SX Pick Your Winner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0a;--card:#111;--red:#e63232;--text:#f0f0f0;--muted:#888;--dim:#555;--font:'Oswald',sans-serif}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiased}
+
+/* CONTAINER */
+.overlay{display:flex;flex-direction:column;height:100%;padding:12px 14px 10px}
+
+/* HEADER */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.logo{font-size:1.1rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red)}
+.logo span{color:var(--text)}
+.race-badge{font-size:.55rem;letter-spacing:2px;text-transform:uppercase;background:var(--red);color:#fff;padding:3px 8px;border-radius:2px;font-weight:600;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(230,50,50,0.4)}50%{box-shadow:0 0 10px 3px rgba(230,50,50,0.25)}}
+
+/* TITLE */
+.title{font-size:1.3rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:2px}
+.subtitle{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--red);text-align:center;margin-bottom:10px}
+
+/* RIDER BARS */
+.riders{flex:1;display:flex;flex-direction:column;gap:6px}
+.rider{position:relative;background:var(--card);border:1px solid #1a1a1a;border-radius:3px;padding:8px 12px;cursor:pointer;transition:all .2s;overflow:hidden}
+.rider:hover{border-color:var(--red)}
+.rider.selected{border-color:var(--red);box-shadow:0 0 12px rgba(230,50,50,0.2)}
+.rider-bar{position:absolute;left:0;top:0;bottom:0;width:0;transition:width .8s ease;border-radius:3px 0 0 3px}
+.rider-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.rider-name{font-size:.85rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.rider-num{font-size:.7rem;color:var(--dim);font-weight:400}
+.rider-team{font-size:.55rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;position:relative;z-index:1}
+.rider-pct{font-size:.9rem;font-weight:700;color:var(--red);opacity:0;transition:opacity .4s;position:relative;z-index:1}
+.rider.voted .rider-pct{opacity:1}
+.rider.voted .rider-bar{width:var(--pct)}
+
+/* VOTE COUNT */
+.vote-total{font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--dim);text-align:center;margin-top:6px}
+
+/* QR & CTA */
+.footer{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;padding-top:8px;border-top:1px solid #1a1a1a}
+.qr-placeholder{width:48px;height:48px;background:var(--card);border:1px solid #222;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:.4rem;color:var(--dim);text-align:center;letter-spacing:.5px;text-transform:uppercase;line-height:1.2}
+.cta{text-align:center}
+.cta-text{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text)}
+.cta-url{font-size:.6rem;color:var(--red);letter-spacing:1px;font-weight:500}
+.cta-sub{font-size:.45rem;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+
+/* LIVE DOT */
+.live-dot{display:inline-block;width:6px;height:6px;background:#ff3333;border-radius:50%;margin-right:4px;animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* SPONSOR */
+.sponsor{font-size:.45rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:center;margin-top:6px}
+.sponsor b{color:#f5c842;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">REV<span>MX</span></div>
+    <div class="race-badge"><span class="live-dot"></span>DETROIT SX</div>
+  </div>
+
+  <!-- TITLE -->
+  <div class="title">Pick Your Winner</div>
+  <div class="subtitle">450SX Main Event — Ford Field</div>
+
+  <!-- RIDERS -->
+  <div class="riders" id="riders">
+    <div class="rider" onclick="vote(0)" data-idx="0">
+      <div class="rider-bar" style="background:rgba(255,102,0,0.15);--pct:0%"></div>
+      <div class="rider-top">
+        <div><span class="rider-name">Eli Tomac</span> <span class="rider-num">#3</span></div>
+        <div class="rider-pct">0%</div>
+      </div>
+      <div class="rider-team">Star Racing Yamaha</div>
+    </div>
+    <div class="rider" onclick="vote(1)" data-idx="1">
+      <div class="rider-bar" style="background:rgba(255,0,0,0.15);--pct:0%"></div>
+      <div class="rider-top">
+        <div><span class="rider-name">Hunter Lawrence</span> <span class="rider-num">#96</span></div>
+        <div class="rider-pct">0%</div>
+      </div>
+      <div class="rider-team">Team Honda HRC</div>
+    </div>
+    <div class="rider" onclick="vote(2)" data-idx="2">
+      <div class="rider-bar" style="background:rgba(0,102,255,0.15);--pct:0%"></div>
+      <div class="rider-top">
+        <div><span class="rider-name">Cooper Webb</span> <span class="rider-num">#1</span></div>
+        <div class="rider-pct">0%</div>
+      </div>
+      <div class="rider-team">Red Bull KTM</div>
+    </div>
+    <div class="rider" onclick="vote(3)" data-idx="3">
+      <div class="rider-bar" style="background:rgba(255,204,0,0.15);--pct:0%"></div>
+      <div class="rider-top">
+        <div><span class="rider-name">Ken Roczen</span> <span class="rider-num">#94</span></div>
+        <div class="rider-pct">0%</div>
+      </div>
+      <div class="rider-team">Suzuki Factory</div>
+    </div>
+    <div class="rider" onclick="vote(4)" data-idx="4">
+      <div class="rider-bar" style="background:rgba(230,0,18,0.15);--pct:0%"></div>
+      <div class="rider-top">
+        <div><span class="rider-name">Chase Sexton</span> <span class="rider-num">#4</span></div>
+        <div class="rider-pct">0%</div>
+      </div>
+      <div class="rider-team">Red Bull KTM — Returns Tonight</div>
+    </div>
+  </div>
+
+  <div class="vote-total" id="vote-total"><span class="live-dot"></span>LIVE FAN VOTE</div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="qr-placeholder">SCAN<br>TO<br>VOTE</div>
+    <div class="cta">
+      <div class="cta-text">Vote Now</div>
+      <div class="cta-url">revmx.com</div>
+      <div class="cta-sub">Pick your winner &amp; win MerchJockey gear</div>
+    </div>
+  </div>
+
+  <div class="sponsor">Presented by <b>MerchJockey.com</b></div>
+</div>
+
+<script>
+// ===== SEED VOTES (simulated community) =====
+var votes = [67, 85, 34, 52, 42];
+var total = votes.reduce(function(a,b){ return a+b; }, 0);
+var voted = false;
+
+// Show initial results (stream viewers see live tallies)
+showResults();
+
+// Simulate incoming votes every 8-15 seconds for live feel
+setInterval(function(){
+  var randomRider = Math.floor(Math.random() * 5);
+  // Weight toward Lawrence and Tomac
+  var weights = [0.25, 0.30, 0.12, 0.18, 0.15];
+  var r = Math.random();
+  var cumulative = 0;
+  for(var i = 0; i < weights.length; i++){
+    cumulative += weights[i];
+    if(r <= cumulative){ randomRider = i; break; }
+  }
+  votes[randomRider]++;
+  total++;
+  showResults();
+}, Math.floor(Math.random() * 7000) + 8000);
+
+function vote(idx){
+  if(voted) return;
+  voted = true;
+  votes[idx]++;
+  total++;
+
+  var riders = document.querySelectorAll('.rider');
+  riders[idx].classList.add('selected');
+  showResults();
+}
+
+function showResults(){
+  var riders = document.querySelectorAll('.rider');
+  riders.forEach(function(el, i){
+    var pct = Math.round((votes[i] / total) * 100);
+    el.classList.add('voted');
+    el.querySelector('.rider-bar').style.setProperty('--pct', pct + '%');
+    el.querySelector('.rider-pct').textContent = pct + '%';
+  });
+  document.getElementById('vote-total').innerHTML = '<span class="live-dot"></span>' + total.toLocaleString() + ' VOTES — LIVE';
+}
+</script>
+
+</body>
+</html>

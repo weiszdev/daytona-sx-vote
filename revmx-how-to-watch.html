@@ -15,12 +15,80 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* === ASTRA THEME OVERRIDES === */
+html, body, #page, #content, .site-content,
+.entry-content, article, .ast-single-post, .ast-page-builder-template,
+.ast-separate-container, .ast-plain-container, #primary, main,
+.site-main, .page .entry-content, .ast-no-sidebar,
+.ast-full-width-layout {
+  background: #0a0a0a !important;
+  background-color: #0a0a0a !important;
+  color: #f0f0f0 !important;
+}
+/* Full-width outer containers only */
+.ast-container, .ast-page-builder-template .site-content > .ast-container {
+  background: #0a0a0a !important;
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 auto !important;
+}
+/* Hide Astra header, footer, sidebar, breadcrumbs */
+.site-header, #masthead, .main-header-bar, .ast-primary-header,
+.ast-above-header, .ast-below-header, .hentry .entry-header,
+.ast-breadcrumbs-wrapper, .post-navigation, .comments-area,
+.ast-author-box, .entry-footer, .ast-single-post-order,
+#ast-footer-copyright, .site-footer, .ast-footer-overlay,
+.ast-small-footer, .ast-footer-copyright,
+footer.site-footer, #colophon,
+.ast-container .site-footer-primary-section-1,
+.ast-container .site-footer-primary-section-2,
+.ast-footer-widget-area, .ast-main-header-wrap {
+  display: none !important;
+}
+/* Remove Astra content padding/margins */
+.entry-content > *:first-child { margin-top: 0 !important; }
+.entry-content { padding: 0 !important; margin: 0 !important; }
+.ast-page-builder-template .entry-content { margin: 0 !important; padding: 0 !important; }
+.ast-separate-container .ast-article-post, .ast-separate-container .ast-article-single { background: #0a0a0a !important; padding: 0 !important; }
+
+/* === BASE RESET === */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0a0a0a;--bg-card:#141414;--bg-card-hover:#1a1a1a;--red:#e63232;--red-glow:rgba(230,50,50,0.15);--text:#f0f0f0;--text-muted:#888;--text-dim:#666;--border:#222;--font-head:'Oswald',sans-serif;--font-body:'Inter',sans-serif}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+body{background:var(--bg) !important;color:var(--text) !important;font-family:var(--font-body) !important;line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:var(--red);text-decoration:none;transition:color .2s}
 a:hover{color:#ff4d4d}
+p, span, div, td, th, li { color: inherit; }
+.entry-content p, .entry-content span, .entry-content div,
+.entry-content td, .entry-content th, .entry-content li,
+.entry-content h1, .entry-content h2, .entry-content h3,
+.entry-content h4, .entry-content h5, .entry-content h6 {
+  color: inherit !important;
+  font-family: inherit !important;
+}
+.entry-content a { color: var(--red) !important; }
+.entry-content a:hover { color: #ff4d4d !important; }
+.entry-content table { border-collapse: collapse !important; border: none !important; }
+.entry-content table td, .entry-content table th { border: none !important; background: transparent !important; }
+/* Force dark on Astra wrappers — but preserve inner centering */
+.ast-page-builder-template .site-content,
+.ast-page-builder-template .entry-content,
+.ast-plain-container .site-content > .ast-container,
+.single .entry-content, .page .entry-content {
+  background: #0a0a0a !important;
+}
+/* Ensure .wrap always centers regardless of parent overrides */
+.entry-content .wrap, .ast-container .wrap, .site-content .wrap,
+article .wrap, main .wrap, #primary .wrap,
+div.wrap, nav.quick-nav .wrap, header.site-header .wrap,
+footer.site-footer .wrap, section .wrap {
+  max-width: 960px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
 
 /* HEADER */
 .site-header{background:#050505;border-bottom:1px solid var(--border);padding:12px 0;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
@@ -29,8 +97,8 @@ a:hover{color:#ff4d4d}
 .logo span{color:var(--text)}
 .header-tag{font-family:var(--font-head);font-size:.7rem;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase}
 
-/* WRAP */
-.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+/* WRAP — must override Astra */
+.wrap{max-width:960px !important;margin:0 auto !important;padding:0 16px !important;width:100% !important}
 
 /* HERO */
 .hero{background:linear-gradient(135deg,#0f0f0f 0%,#1a0a0a 50%,#0f0f0f 100%);border-bottom:2px solid var(--red);padding:48px 16px 40px;text-align:center}
@@ -198,12 +266,66 @@ a:hover{color:#ff4d4d}
 .sponsor-offer{font-size:.75rem;color:var(--text-muted);padding:3px 10px;border:1px solid #332a1a;border-radius:2px;transition:border-color .2s}
 .sponsor-bar a:hover .sponsor-offer{border-color:#f5c842;color:#f5c842}
 
-/* RESPONSIVE TWEAKS */
+/* RESPONSIVE — DESKTOP */
+@media(min-width:1200px){
+  .wrap{max-width:960px !important;margin:0 auto !important}
+  .hero h1{font-size:3rem}
+  .section-title{font-size:2.2rem}
+  .stories-grid{grid-template-columns:1fr 1fr 1fr;gap:20px}
+  .poll-pair{gap:28px}
+  .pred-grid{gap:20px}
+  .facts-grid{gap:16px}
+  .event-card{padding:32px 28px}
+  .sched-grid{grid-template-columns:1fr 1fr 1fr 1fr}
+}
+@media(min-width:960px) and (max-width:1199px){
+  .wrap{max-width:940px !important;margin:0 auto !important}
+}
+
+/* RESPONSIVE — TABLET */
 @media(max-width:768px){
   .event-card{padding:20px 16px}
   .section{padding:36px 0}
   .hero{padding:36px 16px 32px}
 }
+
+/* RESPONSIVE — iOS / MOBILE */
+@media(max-width:480px){
+  .wrap{padding:0 12px}
+  .hero{padding:28px 12px 24px}
+  .hero h1{font-size:1.4rem;letter-spacing:1px}
+  .hero-date{font-size:.85rem}
+  .section-title{font-size:1.3rem}
+  .section{padding:28px 0}
+  .event-card{padding:16px 14px}
+  .event-name{font-size:1.1rem}
+  .cd-block{min-width:50px;padding:6px 10px}
+  .cd-num{font-size:1.4rem}
+  .quick-nav .wrap{gap:6px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+  .quick-nav .wrap::-webkit-scrollbar{display:none}
+  .nav-pill{white-space:nowrap;flex-shrink:0;font-size:.6rem;padding:6px 10px}
+  .stories-grid{grid-template-columns:1fr;gap:12px}
+  .story-tile{min-height:auto;padding:16px 14px 14px}
+  .poll-pair{grid-template-columns:1fr}
+  .pred-grid{grid-template-columns:1fr}
+  .standings-pair{grid-template-columns:1fr}
+  .facts-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .fact-num{font-size:1.3rem}
+  .scenario-table{font-size:.72rem}
+  .scenario-table th,.scenario-table td{padding:6px 6px}
+  .sponsor-bar a{flex-direction:column;gap:4px}
+  .sponsor-name{font-size:.85rem}
+  .sponsor-offer{font-size:.65rem}
+  .sched-grid{grid-template-columns:1fr}
+}
+
+/* iOS Safari safe area */
+@supports(padding-bottom: env(safe-area-inset-bottom)){
+  .site-footer{padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+}
+
+/* Prevent text size adjustment on iOS */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 </style>
 <script type="application/ld+json">
 {
@@ -262,12 +384,14 @@ a:hover{color:#ff4d4d}
 <!-- QUICK NAV -->
 <nav class="quick-nav" aria-label="Event quick links">
   <div class="wrap">
+    <a href="https://revmx.com" class="nav-pill" style="border-color:var(--text-dim);color:var(--text);">&#8592; RevMX Home</a>
     <a href="#detroit" class="nav-pill tonight">Detroit SX</a>
     <a href="#gncc" class="nav-pill">GNCC</a>
     <a href="#mxgp" class="nav-pill">MXGP</a>
     <a href="#stories" class="nav-pill">Stories</a>
     <a href="#predictions" class="nav-pill">Predictions</a>
     <a href="#poll" class="nav-pill">Pick Winner</a>
+    <a href="https://revmx.com/revmx-quiz/" class="nav-pill" style="border-color:#f5c842;color:#f5c842;">Take the Quiz</a>
   </div>
 </nav>
 
