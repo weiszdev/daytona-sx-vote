@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Birmingham SX — Pick Your Winner | REVMX</title>
+<title>St. Louis SX — Pick Your Winner | REVMX</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
 
@@ -201,6 +201,111 @@
   .btn-restart:hover { border-color: #ff4400; color: #ff4400; }
 
   .footer { margin-top: auto; padding-top: 20px; text-align: center; font-size: 10px; color: #333; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* Countdown Timer */
+  .countdown-wrap {
+    background: linear-gradient(135deg, #1a0000 0%, #0d0d0d 100%);
+    border: 2px solid #ff0000;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(255,0,0,0.15);
+  }
+  .countdown-wrap::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #ff0000, #ff4400, #ff0000, #cc0000);
+    z-index: -1;
+    animation: borderGlow 3s ease-in-out infinite;
+  }
+  @keyframes borderGlow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  .live-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #ff0000;
+    margin-bottom: 8px;
+  }
+  .live-dot::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff0000;
+    box-shadow: 0 0 8px #ff0000, 0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.5);
+    animation: livePulse 1.5s ease-in-out infinite;
+  }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px #ff0000, 0 0 20px #ff0000; }
+    50% { opacity: 0.4; box-shadow: 0 0 4px #ff0000, 0 0 10px #ff0000; }
+  }
+  .countdown-label {
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .countdown-digits {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+  .cd-block {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px 10px;
+    min-width: 58px;
+    text-align: center;
+  }
+  .cd-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 0 10px rgba(255,0,0,0.3);
+  }
+  .cd-unit {
+    font-size: 9px;
+    color: #666;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .countdown-event {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: #ff4400;
+    letter-spacing: 2px;
+    margin-top: 8px;
+  }
+  .countdown-live {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    color: #ff0000;
+    text-shadow: 0 0 20px rgba(255,0,0,0.6);
+    animation: liveFlash 1s ease-in-out infinite;
+  }
+  @keyframes liveFlash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
 </style>
 </head>
 <body>
@@ -228,7 +333,19 @@
     </div>
   </div>
 
-  <h1>Birmingham SX</h1>
+  <!-- Countdown Timer -->
+  <div class="countdown-wrap" id="countdownWrap">
+    <div class="live-dot" id="liveLabel">GATE DROP COUNTDOWN</div>
+    <div class="countdown-label">ST. LOUIS SUPERCROSS — MAIN EVENT</div>
+    <div class="countdown-digits" id="countdownDigits">
+      <div class="cd-block"><div class="cd-num" id="cdHours">--</div><div class="cd-unit">Hours</div></div>
+      <div class="cd-block"><div class="cd-num" id="cdMins">--</div><div class="cd-unit">Mins</div></div>
+      <div class="cd-block"><div class="cd-num" id="cdSecs">--</div><div class="cd-unit">Secs</div></div>
+    </div>
+    <div class="countdown-event">APR 4 • THE DOME • 7:00 PM ET</div>
+  </div>
+
+  <h1>St. Louis SX</h1>
   <div class="subtitle">Who's Taking the Checkers?</div>
 
   <!-- Progress -->
@@ -566,6 +683,50 @@
   // Init — load live votes and auto-refresh every 10 seconds
   loadVotes();
   setInterval(loadVotes, 10000);
+
+  // ============================================================
+  // COUNTDOWN TIMER — St. Louis SX Main Event
+  // April 4, 2026 at 7:00 PM ET (23:00 UTC)
+  // ============================================================
+  (function() {
+    var raceTime = new Date('2026-04-04T23:00:00Z'); // 7PM ET = 23:00 UTC
+
+    function updateCountdown() {
+      var now = new Date();
+      var diff = raceTime - now;
+      var wrap = document.getElementById('countdownWrap');
+      var label = document.getElementById('liveLabel');
+      var digits = document.getElementById('countdownDigits');
+
+      if (diff <= 0) {
+        // Race is live or past
+        if (label) label.innerHTML = '<span></span>RACE IS LIVE';
+        if (digits) digits.innerHTML = '<div class="countdown-live">GATE DROP!</div>';
+        wrap.style.borderColor = '#ff0000';
+        wrap.style.boxShadow = '0 0 40px rgba(255,0,0,0.3), 0 0 80px rgba(255,0,0,0.1)';
+        return;
+      }
+
+      var hours = Math.floor(diff / 3600000);
+      var mins = Math.floor((diff % 3600000) / 60000);
+      var secs = Math.floor((diff % 60000) / 1000);
+
+      var hEl = document.getElementById('cdHours');
+      var mEl = document.getElementById('cdMins');
+      var sEl = document.getElementById('cdSecs');
+      if (hEl) hEl.textContent = hours < 10 ? '0' + hours : hours;
+      if (mEl) mEl.textContent = mins < 10 ? '0' + mins : mins;
+      if (sEl) sEl.textContent = secs < 10 ? '0' + secs : secs;
+
+      // Intensify glow as race approaches
+      if (hours === 0 && mins < 30) {
+        wrap.style.boxShadow = '0 0 40px rgba(255,0,0,0.4), 0 0 80px rgba(255,0,0,0.2)';
+      }
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  })();
 </script>
 </body>
 </html>
