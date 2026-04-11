@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>St. Louis SX — Pick Your Winner | REVMX</title>
+<title>Nashville SX — Pick Your Winner | REVMX</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
 
@@ -336,16 +336,16 @@
   <!-- Countdown Timer -->
   <div class="countdown-wrap" id="countdownWrap">
     <div class="live-dot" id="liveLabel">GATE DROP COUNTDOWN</div>
-    <div class="countdown-label">ST. LOUIS SUPERCROSS — MAIN EVENT</div>
+    <div class="countdown-label">NASHVILLE SUPERCROSS — MAIN EVENT</div>
     <div class="countdown-digits" id="countdownDigits">
       <div class="cd-block"><div class="cd-num" id="cdHours">--</div><div class="cd-unit">Hours</div></div>
       <div class="cd-block"><div class="cd-num" id="cdMins">--</div><div class="cd-unit">Mins</div></div>
       <div class="cd-block"><div class="cd-num" id="cdSecs">--</div><div class="cd-unit">Secs</div></div>
     </div>
-    <div class="countdown-event">APR 4 • THE DOME • 7:00 PM ET</div>
+    <div class="countdown-event">APR 11 • NISSAN STADIUM • 3:00 PM ET</div>
   </div>
 
-  <h1>St. Louis SX</h1>
+  <h1>Nashville SX</h1>
   <div class="subtitle">Who's Taking the Checkers?</div>
 
   <!-- Progress -->
@@ -422,7 +422,7 @@
       </div>
       <div class="prediction-card" data-pred="Survives the chaos — last man standing" role="button" tabindex="0">
         <div class="prediction-icon">&#128128;</div>
-        <div><div class="prediction-text">Chaos Survivor</div><div class="prediction-sub">Last one standing in Birmingham carnage</div></div>
+        <div><div class="prediction-text">Chaos Survivor</div><div class="prediction-sub">Last one standing in Nashville carnage</div></div>
       </div>
     </div>
     <button class="btn btn-primary" id="btn3" disabled>Submit My Pick</button>
@@ -433,7 +433,7 @@
     <div class="result-card">
       <div class="result-inner">
         <div class="result-flag">&#127937;</div>
-        <div class="result-pick">Your Pick to Win Birmingham</div>
+        <div class="result-pick">Your Pick to Win Nashville</div>
         <div class="result-name" id="resultName"></div>
         <div class="result-number" id="resultNumber"></div>
         <div class="result-stats">
@@ -455,13 +455,13 @@
     <button class="btn btn-restart" id="btnRestart">Pick Again</button>
   </div>
 
-  <div class="footer">REVMX &#215; Moto Music &#215; Birmingham SX 2026</div>
+  <div class="footer">REVMX &#215; Moto Music &#215; Nashville SX 2026</div>
 </div>
 
 <script>
   // ===== LIVE VOTE STORAGE via Google Sheets + Apps Script =====
   const VOTE_API = 'https://script.google.com/macros/s/AKfycbyLDr5uRDwbheTOJPlghcRpbsEkCBuLpDYwdG1c0BXfXpYpovM-YsvR5KDdEjT_7IQW/exec';
-  const STORAGE_KEY = 'birmingham_sx_2026_vote';
+  const STORAGE_KEY = 'nashville_sx_2026_vote';
   const riders = {
     tomac:    { name: 'Eli Tomac',        number: '#3',  color: '#ff6600' },
     lawrence: { name: 'Hunter Lawrence',  number: '#96', color: '#ff0000' },
@@ -659,9 +659,9 @@
   }
 
   function copyResult() {
-    const text = '\u{1F3C1} My Birmingham SX Pick: ' + selectedRider + ' ' + selectedNumber +
+    const text = '\u{1F3C1} My Nashville SX Pick: ' + selectedRider + ' ' + selectedNumber +
       ' | ' + predShort + ' | ' + confidence + '% confident\n' + prediction +
-      '\n\nCast your vote: ' + window.location.href + '\n#BirminghamSX #Supercross #REVMX';
+      '\n\nCast your vote: ' + window.location.href + '\n#NashvilleSX #Supercross #REVMX';
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.querySelector('#stepResult .btn-primary');
       btn.textContent = 'Copied!';
@@ -689,7 +689,7 @@
   // April 4, 2026 at 7:00 PM ET (23:00 UTC)
   // ============================================================
   (function() {
-    var raceTime = new Date('2026-04-04T23:00:00Z'); // 7PM ET = 23:00 UTC
+    var raceTime = new Date('2026-04-11T19:00:00Z'); // 3PM ET = 19:00 UTC — DAY RACE
 
     function updateCountdown() {
       var now = new Date();
