@@ -151,27 +151,56 @@
 </div>
 
 <script>
+// REVMX GATE DROP COUNTDOWN — Auto-advancing race schedule
 (function(){
-  var race = new Date('2026-04-11T19:00:00Z');
-  function tick(){
-    var now = new Date(), diff = race - now;
-    var wrap = document.getElementById('rxCountdown');
-    if(!wrap) return;
-    if(diff <= 0 && diff > -14400000){
-      document.getElementById('rxCdDigits').innerHTML = '<div class="rx-cd-live">RACING NOW</div>';
-      document.querySelector('.rx-cd-label').textContent = 'LIVE';
-      document.querySelector('.rx-cd-event').textContent = 'NASHVILLE SUPERCROSS — ON NBC';
-      document.querySelector('.rx-cd-info').style.display = 'none';
+  // 2026 Supercross Schedule — Main Events (all times UTC)
+  var schedule = [
+    {date:"2026-02-28T20:00:00Z",name:"Daytona SX",venue:"Daytona International Speedway",round:8},
+    {date:"2026-03-07T20:00:00Z",name:"Indianapolis SX",venue:"Lucas Oil Stadium",round:9},
+    {date:"2026-03-21T19:00:00Z",name:"Birmingham SX",venue:"Protective Stadium",round:10},
+    {date:"2026-03-28T19:00:00Z",name:"Detroit SX",venue:"Ford Field",round:11},
+    {date:"2026-04-05T19:00:00Z",name:"Seattle SX",venue:"Lumen Field",round:12},
+    {date:"2026-04-11T19:00:00Z",name:"Nashville SX",venue:"Nissan Stadium",round:13},
+    {date:"2026-04-18T19:00:00Z",name:"St. Louis SX",venue:"The Dome at Americas Center",round:14},
+    {date:"2026-04-25T19:00:00Z",name:"Denver SX",venue:"Empower Field at Mile High",round:15},
+    {date:"2026-05-02T19:00:00Z",name:"Foxborough SX",venue:"Gillette Stadium",round:16},
+    {date:"2026-05-09T19:00:00Z",name:"Salt Lake City SX",venue:"Rice-Eccles Stadium",round:17}
+  ];
+  var now = new Date(), next = null;
+  for (var i = 0; i < schedule.length; i++) {
+    if (new Date(schedule[i].date) > now) { next = schedule[i]; break; }
+  }
+  if (!next) {
+    var w = document.getElementById("rxCountdown");
+    if (w) w.innerHTML = '<div class="rx-cd-label" style="color:#ff4400;">Season Complete</div>' +
+      '<div class="rx-cd-event" style="color:#aaa;margin-top:8px;">See you in 2027!</div>';
+    return;
+  }
+  var rd = new Date(next.date);
+  var mo = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  var ds = mo[rd.getUTCMonth()] + " " + rd.getUTCDate();
+  var tET = rd.getUTCHours() - 4, ap = tET >= 12 ? "PM" : "AM";
+  if (tET > 12) tET -= 12;
+  var ev = document.querySelector(".rx-cd-event");
+  var inf = document.querySelector(".rx-cd-info");
+  if (ev) ev.textContent = next.name.replace(" SX","") + " Supercross \u2014 Main Event";
+  if (inf) inf.textContent = ds + " \u2014 " + next.venue.toUpperCase() + " \u2014 " + tET + ":00 " + ap + " ET";
+  function tick() {
+    var now = new Date(), diff = rd - now;
+    if (diff <= 0) {
+      var h = document.getElementById("rxH"), m = document.getElementById("rxM"), s = document.getElementById("rxS");
+      if (h) h.textContent = "00"; if (m) m.textContent = "00"; if (s) s.textContent = "00";
+      var lb = document.querySelector(".rx-cd-label");
+      if (lb) lb.innerHTML = '<span style="color:#00ff00;animation:pulse 1s infinite">&#9679;</span> GATE DROP \u2014 RACE IS LIVE';
       return;
     }
-    if(diff <= -14400000){ wrap.style.display='none'; return; }
-    var h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-    var rH = document.getElementById('rxH'), rM = document.getElementById('rxM'), rS = document.getElementById('rxS');
-    if(rH) rH.textContent = h < 10 ? '0'+h : h;
-    if(rM) rM.textContent = m < 10 ? '0'+m : m;
-    if(rS) rS.textContent = s < 10 ? '0'+s : s;
+    var ts = Math.floor(diff/1000), d = Math.floor(ts/86400), hr = Math.floor((ts%86400)/3600);
+    var mn = Math.floor((ts%3600)/60), sc = ts%60, hv = d > 0 ? (d*24+hr) : hr;
+    var rH = document.getElementById("rxH"), rM = document.getElementById("rxM"), rS = document.getElementById("rxS");
+    if (rH) rH.textContent = String(hv).padStart(2,"0");
+    if (rM) rM.textContent = String(mn).padStart(2,"0");
+    if (rS) rS.textContent = String(sc).padStart(2,"0");
   }
-  tick();
-  setInterval(tick, 1000);
+  tick(); setInterval(tick, 1000);
 })();
 </script>
