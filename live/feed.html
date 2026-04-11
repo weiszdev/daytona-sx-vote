@@ -1,0 +1,177 @@
+<!-- REVMX LIVE FEED — Auto-loaded on revmx.com/live -->
+<!-- Last updated: 2026-04-11 | Nashville SX Round 13 -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+.rx-live { font-family:'Rajdhani',sans-serif; color:#fff; max-width:720px; margin:0 auto; font-weight:600; }
+.rx-live * { box-sizing:border-box; margin:0; padding:0; }
+.rx-stripe { height:6px; background:linear-gradient(90deg,#ff0000,#ff4400,#ffaa00,#ff4400,#ff0000); border-radius:3px; margin-bottom:20px; animation:rxGlow 2s ease-in-out infinite; }
+@keyframes rxGlow { 0%,100%{box-shadow:0 0 10px rgba(255,68,0,0.5);} 50%{box-shadow:0 0 25px rgba(255,68,0,0.9);} }
+.rx-header { text-align:center; margin-bottom:24px; }
+.rx-badge { display:inline-block; background:linear-gradient(135deg,#ff0000,#cc0000); font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:3px; padding:5px 14px; border-radius:3px; text-transform:uppercase; color:#fff; }
+.rx-badge-day { background:linear-gradient(135deg,#ffaa00,#ff6600); margin-left:6px; }
+.rx-title { font-family:'Orbitron',monospace; font-size:26px; font-weight:900; text-transform:uppercase; letter-spacing:2px; color:#fff; margin:10px 0 4px; }
+.rx-sub { font-size:15px; color:#ff4400; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.rx-broadcast { font-family:'Orbitron',monospace; font-size:11px; color:#aaa; letter-spacing:2px; margin-top:6px; }
+.rx-broadcast strong { color:#ff4400; }
+
+/* COUNTDOWN */
+.rx-countdown { background:linear-gradient(135deg,#1a0000,#0d0d0d); border:2px solid #ff0000; border-radius:10px; padding:18px; margin-bottom:24px; text-align:center; box-shadow:0 0 30px rgba(255,0,0,0.15); }
+.rx-cd-label { font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#ff0000; margin-bottom:6px; display:flex; align-items:center; justify-content:center; gap:8px; }
+.rx-cd-label::before { content:''; width:10px; height:10px; border-radius:50%; background:#ff0000; box-shadow:0 0 8px #ff0000,0 0 20px #ff0000; animation:rxPulse 1.5s ease-in-out infinite; }
+@keyframes rxPulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.rx-cd-event { font-size:12px; color:#888; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+.rx-cd-digits { display:flex; justify-content:center; gap:8px; }
+.rx-cd-block { background:#111; border:1px solid #333; border-radius:6px; padding:10px 12px; min-width:60px; text-align:center; }
+.rx-cd-num { font-family:'Orbitron',monospace; font-size:28px; font-weight:900; color:#fff; line-height:1; text-shadow:0 0 10px rgba(255,0,0,0.3); }
+.rx-cd-unit { font-size:9px; color:#666; letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+.rx-cd-info { font-family:'Orbitron',monospace; font-size:11px; color:#ff4400; letter-spacing:2px; margin-top:10px; }
+.rx-cd-live { font-family:'Orbitron',monospace; font-size:24px; font-weight:900; color:#ff0000; text-shadow:0 0 20px rgba(255,0,0,0.6); animation:rxFlash 1s ease-in-out infinite; padding:20px 0; }
+@keyframes rxFlash { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+/* STORIES */
+.rx-stories { margin-bottom:24px; }
+.rx-story { background:linear-gradient(135deg,#1a1a1a,#0d0d0d); border:2px solid #222; border-radius:10px; padding:22px 22px 22px 26px; margin-bottom:14px; position:relative; overflow:hidden; transition:border-color 0.3s; }
+.rx-story:hover { border-color:#ff4400; }
+.rx-story::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(180deg,#ff0000,#ff4400); }
+.rx-story-num { font-family:'Orbitron',monospace; font-size:11px; color:#ff4400; letter-spacing:3px; margin-bottom:6px; }
+.rx-story h3 { font-family:'Orbitron',monospace; font-size:17px; font-weight:900; text-transform:uppercase; letter-spacing:1px; line-height:1.25; margin-bottom:10px; color:#fff; }
+.rx-story p { font-size:15px; color:#ddd; line-height:1.7; margin-bottom:8px; font-weight:600; }
+.rx-stat { font-family:'Orbitron',monospace; font-size:11px; color:#ff4400; letter-spacing:1px; padding:8px 12px; background:#111; border-radius:4px; border:1px solid #222; margin-top:8px; display:inline-block; }
+.rx-pills { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.rx-pill { padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700; background:#111; border:1px solid #333; color:#fff; }
+.rx-pill .rn { color:#ff4400; margin-right:4px; font-family:'Orbitron',monospace; }
+.rx-pill-out { border-color:#ff0000; }
+.rx-pill-champ { border-color:#ffcc00; }
+
+/* VOTE CTA */
+.rx-cta { text-align:center; margin:28px 0; }
+.rx-cta a { display:inline-block; padding:14px 28px; background:linear-gradient(135deg,#ff0000,#ff4400); color:#fff; font-family:'Orbitron',monospace; font-size:14px; font-weight:700; letter-spacing:3px; text-transform:uppercase; border-radius:6px; text-decoration:none; box-shadow:0 4px 20px rgba(255,68,0,0.3); transition:all 0.3s; }
+.rx-cta a:hover { box-shadow:0 4px 30px rgba(255,68,0,0.6); transform:translateY(-2px); }
+
+/* FOOTER */
+.rx-sources { text-align:center; font-size:11px; color:#555; letter-spacing:1px; margin-top:16px; }
+.rx-footer { text-align:center; padding:16px 0; font-size:10px; color:#444; letter-spacing:2px; text-transform:uppercase; }
+.rx-footer a { color:#ff4400; text-decoration:none; }
+</style>
+
+<div class="rx-live">
+  <div class="rx-stripe"></div>
+
+  <!-- HEADER -->
+  <div class="rx-header">
+    <span class="rx-badge">Round 13 — April 11, 2026</span>
+    <span class="rx-badge rx-badge-day">Day Race</span>
+    <div class="rx-title">Nashville SX</div>
+    <div class="rx-sub">Nissan Stadium — 250 East in Action</div>
+    <div class="rx-broadcast">NBC &amp; Peacock — Qualifying <strong>9 AM ET</strong> — Mains <strong>3 PM ET</strong></div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="rx-countdown" id="rxCountdown">
+    <div class="rx-cd-label">Gate Drop Countdown</div>
+    <div class="rx-cd-event">Nashville Supercross — Main Event</div>
+    <div class="rx-cd-digits" id="rxCdDigits">
+      <div class="rx-cd-block"><div class="rx-cd-num" id="rxH">--</div><div class="rx-cd-unit">Hours</div></div>
+      <div class="rx-cd-block"><div class="rx-cd-num" id="rxM">--</div><div class="rx-cd-unit">Mins</div></div>
+      <div class="rx-cd-block"><div class="rx-cd-num" id="rxS">--</div><div class="rx-cd-unit">Secs</div></div>
+    </div>
+    <div class="rx-cd-info">APR 11 — NISSAN STADIUM — 3:00 PM ET</div>
+  </div>
+
+  <!-- STORIES -->
+  <div class="rx-stories">
+
+    <div class="rx-story">
+      <div class="rx-story-num">Story 01</div>
+      <h3>Roczen Is on Fire — Three Straight Wins and Climbing</h3>
+      <p>Ken Roczen dominated St. Louis wire-to-wire, winning by 13.2 seconds over Justin Cooper. That's three consecutive victories and his third win of 2026. Nobody in the field has looked this fast for this long this season.</p>
+      <p>He entered the year as a question mark after switching to Suzuki Factory. Now he's 5 points off the lead with 5 rounds remaining. If he wins Nashville, he takes the red plate.</p>
+      <div class="rx-stat">ROCZEN: 3 CONSECUTIVE WINS — 13.2 SEC MARGIN IN STL</div>
+      <div class="rx-pills">
+        <span class="rx-pill"><span class="rn">#94</span> Roczen</span>
+        <span class="rx-pill"><span class="rn">#32</span> Cooper</span>
+        <span class="rx-pill"><span class="rn">#96</span> H. Lawrence</span>
+      </div>
+    </div>
+
+    <div class="rx-story">
+      <div class="rx-story-num">Story 02</div>
+      <h3>Three Riders, Five Points, Five Rounds — Title Fight Goes Nuclear</h3>
+      <p>Eli Tomac and Hunter Lawrence are tied at 245 points. Ken Roczen sits at 240. Cooper Webb lurks at 220. This is the tightest championship battle in years and Nashville is the first of five rounds that will decide everything.</p>
+      <p>One crash, one bad start, one mechanical — that's all it takes. Day race energy, outdoor stadium, NBC cameras rolling. Someone is going to crack.</p>
+      <div class="rx-stat">450SX: TOMAC 245 — LAWRENCE 245 — ROCZEN 240 — WEBB 220</div>
+      <div class="rx-pills">
+        <span class="rx-pill"><span class="rn">#3</span> Tomac</span>
+        <span class="rx-pill"><span class="rn">#96</span> Lawrence</span>
+        <span class="rx-pill"><span class="rn">#94</span> Roczen</span>
+        <span class="rx-pill"><span class="rn">#1</span> Webb</span>
+      </div>
+    </div>
+
+    <div class="rx-story">
+      <div class="rx-story-num">Story 03</div>
+      <h3>Deegan Crowned — Back-to-Back 250 West Titles</h3>
+      <p>Haiden Deegan wrapped up the 250SX West championship in St. Louis with a 50-point cushion. Back-to-back titles. Dominant. Nashville runs 250 East, so Deegan isn't in action this week — but his shadow looms over every 250 rider in the building.</p>
+      <div class="rx-stat">DEEGAN: 250 WEST CHAMPION — 50-POINT CUSHION</div>
+      <div class="rx-pills">
+        <span class="rx-pill rx-pill-champ"><span class="rn">#38</span> Deegan</span>
+      </div>
+    </div>
+
+    <div class="rx-story">
+      <div class="rx-story-num">Story 04</div>
+      <h3>Shimoda Out for the Season — 250 East Is a Two-Horse Race</h3>
+      <p>Jo Shimoda is done for the rest of Supercross with a fibula fracture. Cole Davies now leads Seth Hammaker by 11 points with no third rider within striking distance.</p>
+      <p>Nashville is 250 East territory. Davies vs. Hammaker — head to head, no distractions, no safety net. Hammaker needs to close the gap tonight or risk watching Davies ride away with it.</p>
+      <div class="rx-stat">250E: DAVIES LEADS HAMMAKER BY 11 — SHIMODA OUT (FIBULA)</div>
+      <div class="rx-pills">
+        <span class="rx-pill"><span class="rn">#62</span> Davies</span>
+        <span class="rx-pill"><span class="rn">#34</span> Hammaker</span>
+        <span class="rx-pill rx-pill-out"><span class="rn">OUT</span> Shimoda</span>
+      </div>
+    </div>
+
+    <div class="rx-story">
+      <div class="rx-story-num">Story 05</div>
+      <h3>Day Race at Nissan Stadium — Nashville Changes Everything</h3>
+      <p>This is a day race. Outdoor stadium. Natural light. The track will ride differently under the sun — harder, slicker, more unpredictable. Day races historically produce chaos.</p>
+      <p>Nissan Stadium holds 69,000+. Qualifying at 9 AM ET on Peacock. Mains at 3 PM ET on NBC and Peacock. 250 East division and one of the tightest 450 title fights in recent memory. Must-watch racing.</p>
+      <div class="rx-stat">NISSAN STADIUM — DAY RACE — NBC + PEACOCK — 3 PM ET</div>
+    </div>
+
+  </div>
+
+  <!-- VOTE CTA -->
+  <div class="rx-cta">
+    <a href="https://weiszdev.github.io/daytona-sx-vote/">Vote — Who's Taking the Checkers? &rarr;</a>
+  </div>
+
+  <div class="rx-sources">Sources: Racer X &bull; Cycle News &bull; NBC Sports &bull; supercrosslive.com</div>
+  <div class="rx-footer"><a href="https://revmx.com">REVMX</a> — Nashville SX 2026</div>
+</div>
+
+<script>
+(function(){
+  var race = new Date('2026-04-11T19:00:00Z');
+  function tick(){
+    var now = new Date(), diff = race - now;
+    var wrap = document.getElementById('rxCountdown');
+    if(!wrap) return;
+    if(diff <= 0 && diff > -14400000){
+      document.getElementById('rxCdDigits').innerHTML = '<div class="rx-cd-live">RACING NOW</div>';
+      document.querySelector('.rx-cd-label').textContent = 'LIVE';
+      document.querySelector('.rx-cd-event').textContent = 'NASHVILLE SUPERCROSS — ON NBC';
+      document.querySelector('.rx-cd-info').style.display = 'none';
+      return;
+    }
+    if(diff <= -14400000){ wrap.style.display='none'; return; }
+    var h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+    var rH = document.getElementById('rxH'), rM = document.getElementById('rxM'), rS = document.getElementById('rxS');
+    if(rH) rH.textContent = h < 10 ? '0'+h : h;
+    if(rM) rM.textContent = m < 10 ? '0'+m : m;
+    if(rS) rS.textContent = s < 10 ? '0'+s : s;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
