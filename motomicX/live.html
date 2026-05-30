@@ -272,10 +272,10 @@
   .motomic-column { display: grid; align-content: start; gap: 0.18rem; }
   .motomic-row {
     display: grid;
-    grid-template-columns: 2.65em 3.25em minmax(5em,1fr) 4.9em 4.15em 4.15em 4.15em;
+    grid-template-columns: 2.65em 3.25em minmax(8em,1fr) 4.2em 3.4em 5.2em 5.2em 5.2em;
     align-items: center;
     min-height: 1.85rem;
-    column-gap: 0.24rem;
+    column-gap: 0.5rem;
     row-gap: 0;
     border-left: 4px solid transparent;
     padding: 0.12rem 0.45rem;
@@ -296,6 +296,9 @@
   }
   .motomic-pos { color: var(--red); font-weight: 900; }
   .motomic-number { padding-left: 0.35rem; }
+  .motomic-time { border-left: 1px solid var(--line); padding-left: 0.4rem; }
+  .motomic-gap { border-left: 1px solid var(--line); padding-left: 0.4rem; }
+  .motomic-laps { text-align: center; color: var(--muted); }
   .motomic-name {
     overflow: hidden;
     padding-right: 0.1rem;
@@ -443,26 +446,26 @@
 
   // ── Demo / Fallback Riders ─────────────────────────────────────
   var DEMO_RIDERS = [
-    {pos:"1",number:"18",name:"Jett Lawrence",bike:"HON",bikeBrand:"honda",last:"1:51.234",best:"1:50.891",gap:"+0.000"},
-    {pos:"2",number:"2",name:"Cooper Webb",bike:"YAM",bikeBrand:"yamaha",last:"1:51.567",best:"1:51.102",gap:"+0.211"},
-    {pos:"3",number:"23",name:"Chase Sexton",bike:"KTM",bikeBrand:"ktm",last:"1:51.890",best:"1:51.344",gap:"+0.453"},
-    {pos:"4",number:"1",name:"Eli Tomac",bike:"YAM",bikeBrand:"yamaha",last:"1:52.012",best:"1:51.567",gap:"+0.676"},
-    {pos:"5",number:"7",name:"Aaron Plessinger",bike:"KTM",bikeBrand:"ktm",last:"1:52.345",best:"1:51.890",gap:"+0.999"},
-    {pos:"6",number:"51",name:"Justin Barcia",bike:"GAS",bikeBrand:"gasgas",last:"1:52.678",best:"1:52.123",gap:"+1.232"},
-    {pos:"7",number:"27",name:"Malcolm Stewart",bike:"HUS",bikeBrand:"husqvarna",last:"1:52.901",best:"1:52.456",gap:"+1.565"},
-    {pos:"8",number:"15",name:"Dean Wilson",bike:"HUS",bikeBrand:"husqvarna",last:"1:53.123",best:"1:52.789",gap:"+1.898"},
-    {pos:"9",number:"25",name:"Marvin Musquin",bike:"KTM",bikeBrand:"ktm",last:"1:53.456",best:"1:53.012",gap:"+2.121"},
-    {pos:"10",number:"21",name:"Jason Anderson",bike:"KAW",bikeBrand:"kawasaki",last:"1:53.678",best:"1:53.234",gap:"+2.343"},
-    {pos:"11",number:"14",name:"Dylan Ferrandis",bike:"HUS",bikeBrand:"husqvarna",last:"1:53.890",best:"1:53.456",gap:"+2.565"},
-    {pos:"12",number:"17",name:"Joey Savatgy",bike:"TRI",bikeBrand:"triumph",last:"1:54.012",best:"1:53.678",gap:"+2.787"},
-    {pos:"13",number:"10",name:"Justin Brayton",bike:"HON",bikeBrand:"honda",last:"1:54.234",best:"1:53.890",gap:"+2.999"},
-    {pos:"14",number:"40",name:"Vince Friese",bike:"HON",bikeBrand:"honda",last:"1:54.456",best:"1:54.012",gap:"+3.121"},
-    {pos:"15",number:"33",name:"Grant Harlan",bike:"KAW",bikeBrand:"kawasaki",last:"1:54.678",best:"1:54.234",gap:"+3.343"},
-    {pos:"16",number:"36",name:"Garrett Marchbanks",bike:"YAM",bikeBrand:"yamaha",last:"1:54.890",best:"1:54.456",gap:"+3.565"},
-    {pos:"17",number:"55",name:"Justin Starling",bike:"GAS",bikeBrand:"gasgas",last:"1:55.012",best:"1:54.678",gap:"+3.787"},
-    {pos:"18",number:"68",name:"Brandon Hartranft",bike:"KAW",bikeBrand:"kawasaki",last:"1:55.234",best:"1:54.890",gap:"+3.999"},
-    {pos:"19",number:"72",name:"Cade Clason",bike:"HON",bikeBrand:"honda",last:"1:55.456",best:"1:55.012",gap:"+4.121"},
-    {pos:"20",number:"81",name:"Fredrik Noren",bike:"HUS",bikeBrand:"husqvarna",last:"1:55.678",best:"1:55.234",gap:"+4.343"},
+    {pos:"1",number:"18",name:"Jett Lawrence",bike:"HON",bikeBrand:"honda",laps:"12",last:"1:51.234",best:"1:50.891",gap:"—"},
+    {pos:"2",number:"2",name:"Cooper Webb",bike:"YAM",bikeBrand:"yamaha",laps:"12",last:"1:51.567",best:"1:51.102",gap:"+0.211"},
+    {pos:"3",number:"23",name:"Chase Sexton",bike:"KTM",bikeBrand:"ktm",laps:"12",last:"1:51.890",best:"1:51.344",gap:"+0.453"},
+    {pos:"4",number:"1",name:"Eli Tomac",bike:"YAM",bikeBrand:"yamaha",laps:"12",last:"1:52.012",best:"1:51.567",gap:"+0.676"},
+    {pos:"5",number:"7",name:"Aaron Plessinger",bike:"KTM",bikeBrand:"ktm",laps:"12",last:"1:52.345",best:"1:51.890",gap:"+0.999"},
+    {pos:"6",number:"51",name:"Justin Barcia",bike:"GAS",bikeBrand:"gasgas",laps:"12",last:"1:52.678",best:"1:52.123",gap:"+1.232"},
+    {pos:"7",number:"27",name:"Malcolm Stewart",bike:"HUS",bikeBrand:"husqvarna",laps:"12",last:"1:52.901",best:"1:52.456",gap:"+1.565"},
+    {pos:"8",number:"15",name:"Dean Wilson",bike:"HUS",bikeBrand:"husqvarna",laps:"12",last:"1:53.123",best:"1:52.789",gap:"+1.898"},
+    {pos:"9",number:"25",name:"Marvin Musquin",bike:"KTM",bikeBrand:"ktm",laps:"12",last:"1:53.456",best:"1:53.012",gap:"+2.121"},
+    {pos:"10",number:"21",name:"Jason Anderson",bike:"KAW",bikeBrand:"kawasaki",laps:"12",last:"1:53.678",best:"1:53.234",gap:"+2.343"},
+    {pos:"11",number:"14",name:"Dylan Ferrandis",bike:"HUS",bikeBrand:"husqvarna",laps:"12",last:"1:53.890",best:"1:53.456",gap:"+2.565"},
+    {pos:"12",number:"17",name:"Joey Savatgy",bike:"TRI",bikeBrand:"triumph",laps:"11",last:"1:54.012",best:"1:53.678",gap:"+2.787"},
+    {pos:"13",number:"10",name:"Justin Brayton",bike:"HON",bikeBrand:"honda",laps:"11",last:"1:54.234",best:"1:53.890",gap:"+2.999"},
+    {pos:"14",number:"40",name:"Vince Friese",bike:"HON",bikeBrand:"honda",laps:"11",last:"1:54.456",best:"1:54.012",gap:"+3.121"},
+    {pos:"15",number:"33",name:"Grant Harlan",bike:"KAW",bikeBrand:"kawasaki",laps:"11",last:"1:54.678",best:"1:54.234",gap:"+3.343"},
+    {pos:"16",number:"36",name:"Garrett Marchbanks",bike:"YAM",bikeBrand:"yamaha",laps:"11",last:"1:54.890",best:"1:54.456",gap:"+3.565"},
+    {pos:"17",number:"55",name:"Justin Starling",bike:"GAS",bikeBrand:"gasgas",laps:"11",last:"1:55.012",best:"1:54.678",gap:"+3.787"},
+    {pos:"18",number:"68",name:"Brandon Hartranft",bike:"KAW",bikeBrand:"kawasaki",laps:"11",last:"1:55.234",best:"1:54.890",gap:"+3.999"},
+    {pos:"19",number:"72",name:"Cade Clason",bike:"HON",bikeBrand:"honda",laps:"11",last:"1:55.456",best:"1:55.012",gap:"+4.121"},
+    {pos:"20",number:"81",name:"Fredrik Noren",bike:"HUS",bikeBrand:"husqvarna",laps:"11",last:"1:55.678",best:"1:55.234",gap:"+4.343"},
   ];
 
   // ── DOM refs ──────────────────────────────────────────────────
@@ -552,7 +555,7 @@
     row.className = isHeader ? "motomic-row motomic-header" : "motomic-row";
     if (isHeader) {
       row.innerHTML =
-        "<span>Pos</span><span>#</span><span>Rider</span><span>Bike</span><span>Last</span><span>Best</span><span>Gap</span>";
+        "<span>Pos</span><span>#</span><span>Rider</span><span>Bike</span><span class='motomic-laps'>Laps</span><span class='motomic-time'>Last</span><span class='motomic-time'>Best</span><span class='motomic-gap'>Gap</span>";
     } else {
       var bikeColor = BRAND_COLORS[rider.bikeBrand] || "var(--white)";
       row.innerHTML =
@@ -560,6 +563,7 @@
         '<span class="motomic-number">' + (rider.number || "") + "</span>" +
         '<span class="motomic-name">' + (rider.name || "") + "</span>" +
         '<span class="motomic-bike" style="color:' + bikeColor + '">' + (rider.bike || "") + "</span>" +
+        '<span class="motomic-laps">' + (rider.laps || "-") + "</span>" +
         '<span class="motomic-time">' + (rider.last || "") + "</span>" +
         '<span class="motomic-time">' + (rider.best || "") + "</span>" +
         '<span class="motomic-gap">' + (rider.gap || "") + "</span>";
