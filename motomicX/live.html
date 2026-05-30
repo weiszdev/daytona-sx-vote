@@ -240,7 +240,7 @@
   }
   .motomic-columns {
     display: grid;
-    grid-template-columns: minmax(0,1fr) minmax(300px,33vw) minmax(0,1fr);
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
     gap: 0.75rem;
   }
   .motomic-content {
@@ -250,12 +250,13 @@
   }
   .motomic-video-slot {
     display: grid;
-    align-self: start;
     grid-template-columns: 1fr;
     align-items: center;
     border: 3px solid var(--red);
     padding: 0.45rem;
     background: var(--panel);
+    max-width: 480px;
+    margin-top: 0.5rem;
   }
   .motomic-video-frame {
     aspect-ratio: 16/9;
@@ -380,9 +381,9 @@
   <section class="motomic-content">
     <section class="motomic-columns" id="board-columns">
       <div class="motomic-column" id="col-left"></div>
-      <section class="motomic-video-slot"><div class="motomic-video-frame"></div></section>
       <div class="motomic-column" id="col-right"></div>
     </section>
+    <section class="motomic-video-slot"><div class="motomic-video-frame">Video Feed</div></section>
   </section>
 </main>
 
