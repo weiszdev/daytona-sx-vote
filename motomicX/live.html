@@ -350,15 +350,8 @@
   </div>
 </div>
 
-<!-- WAITING STATE (shown until first data arrives) -->
-<div class="waiting-state" id="waiting-state">
-  <div class="waiting-spinner"></div>
-  <h2><span>MotoMic</span> Live Timing</h2>
-  <p>Waiting for data from the relay endpoint. Make sure the Tampermonkey userscript is running on live.supercrosslive.com with the relay enabled.</p>
-</div>
-
-<!-- BOARD (hidden until data arrives) -->
-<main class="motomic-board" id="motomic-board" style="display:none">
+<!-- BOARD (always visible — shows demo data until live data arrives) -->
+<main class="motomic-board" id="motomic-board">
   <header class="motomic-board-title">
     <div class="motomic-brand-title">MotoMic</div>
     <div class="motomic-title-main" id="event-title">Live Timing</div>
@@ -448,8 +441,31 @@
     yamaha: "var(--yamaha)",
   };
 
+  // ── Demo / Fallback Riders ─────────────────────────────────────
+  var DEMO_RIDERS = [
+    {pos:"1",number:"18",name:"Jett Lawrence",bike:"HON",bikeBrand:"honda",last:"1:51.234",best:"1:50.891",gap:"+0.000"},
+    {pos:"2",number:"2",name:"Cooper Webb",bike:"YAM",bikeBrand:"yamaha",last:"1:51.567",best:"1:51.102",gap:"+0.211"},
+    {pos:"3",number:"23",name:"Chase Sexton",bike:"KTM",bikeBrand:"ktm",last:"1:51.890",best:"1:51.344",gap:"+0.453"},
+    {pos:"4",number:"1",name:"Eli Tomac",bike:"YAM",bikeBrand:"yamaha",last:"1:52.012",best:"1:51.567",gap:"+0.676"},
+    {pos:"5",number:"7",name:"Aaron Plessinger",bike:"KTM",bikeBrand:"ktm",last:"1:52.345",best:"1:51.890",gap:"+0.999"},
+    {pos:"6",number:"51",name:"Justin Barcia",bike:"GAS",bikeBrand:"gasgas",last:"1:52.678",best:"1:52.123",gap:"+1.232"},
+    {pos:"7",number:"27",name:"Malcolm Stewart",bike:"HUS",bikeBrand:"husqvarna",last:"1:52.901",best:"1:52.456",gap:"+1.565"},
+    {pos:"8",number:"15",name:"Dean Wilson",bike:"HUS",bikeBrand:"husqvarna",last:"1:53.123",best:"1:52.789",gap:"+1.898"},
+    {pos:"9",number:"25",name:"Marvin Musquin",bike:"KTM",bikeBrand:"ktm",last:"1:53.456",best:"1:53.012",gap:"+2.121"},
+    {pos:"10",number:"21",name:"Jason Anderson",bike:"KAW",bikeBrand:"kawasaki",last:"1:53.678",best:"1:53.234",gap:"+2.343"},
+    {pos:"11",number:"14",name:"Dylan Ferrandis",bike:"HUS",bikeBrand:"husqvarna",last:"1:53.890",best:"1:53.456",gap:"+2.565"},
+    {pos:"12",number:"17",name:"Joey Savatgy",bike:"TRI",bikeBrand:"triumph",last:"1:54.012",best:"1:53.678",gap:"+2.787"},
+    {pos:"13",number:"10",name:"Justin Brayton",bike:"HON",bikeBrand:"honda",last:"1:54.234",best:"1:53.890",gap:"+2.999"},
+    {pos:"14",number:"40",name:"Vince Friese",bike:"HON",bikeBrand:"honda",last:"1:54.456",best:"1:54.012",gap:"+3.121"},
+    {pos:"15",number:"33",name:"Grant Harlan",bike:"KAW",bikeBrand:"kawasaki",last:"1:54.678",best:"1:54.234",gap:"+3.343"},
+    {pos:"16",number:"36",name:"Garrett Marchbanks",bike:"YAM",bikeBrand:"yamaha",last:"1:54.890",best:"1:54.456",gap:"+3.565"},
+    {pos:"17",number:"55",name:"Justin Starling",bike:"GAS",bikeBrand:"gasgas",last:"1:55.012",best:"1:54.678",gap:"+3.787"},
+    {pos:"18",number:"68",name:"Brandon Hartranft",bike:"KAW",bikeBrand:"kawasaki",last:"1:55.234",best:"1:54.890",gap:"+3.999"},
+    {pos:"19",number:"72",name:"Cade Clason",bike:"HON",bikeBrand:"honda",last:"1:55.456",best:"1:55.012",gap:"+4.121"},
+    {pos:"20",number:"81",name:"Fredrik Noren",bike:"HUS",bikeBrand:"husqvarna",last:"1:55.678",best:"1:55.234",gap:"+4.343"},
+  ];
+
   // ── DOM refs ──────────────────────────────────────────────────
-  var waitingState = document.getElementById("waiting-state");
   var boardEl = document.getElementById("motomic-board");
   var eventTitleEl = document.getElementById("event-title");
   var clockEl = document.getElementById("clock");
@@ -576,9 +592,6 @@
     hasData = true;
     lastDataTimestamp = data.lastUpdated || data.timestamp;
 
-    waitingState.style.display = "none";
-    boardEl.style.display = "block";
-
     eventTitleEl.textContent = data.eventTitle || "Live Timing";
     clockEl.textContent = data.clock || "";
 
@@ -586,23 +599,33 @@
     updateStatusBadge();
   }
 
+  function showDemo() {
+    eventTitleEl.textContent = "Fox Raceway - Pala, CA | Pro Motocross";
+    clockEl.textContent = "";
+    renderRiders(DEMO_RIDERS);
+    statusBadge.className = "badge badge-waiting";
+    statusBadge.innerHTML = '<span class="badge-dot"></span> Demo';
+    lastUpdatedEl.textContent = "Waiting for live relay data";
+  }
+
   // ── Fetch Loop ────────────────────────────────────────────────
   function fetchData() {
-    if (!RELAY_URL || RELAY_URL === "https://script.google.com/macros/s/AKfycbzhbBPXYXS32B7US_to-qjSd8_6sYrzLHP8cJAhHN0VchV7YuOrO8ACdHORq5I64QjN/exec") {
-      waitingState.querySelector("p").textContent =
-        "No relay URL configured. Add ?relay=YOUR_APPS_SCRIPT_URL to this page URL, or set DEFAULT_RELAY_URL in the source.";
-      return;
-    }
+    if (!RELAY_URL) return;
 
     fetch(RELAY_URL)
       .then(function (res) { return res.json(); })
-      .then(function (data) { applyData(data); })
+      .then(function (data) {
+        if (data && data.riders && data.riders.length > 0) {
+          applyData(data);
+        }
+      })
       .catch(function (err) {
         console.warn("[MotoMic LIVE] Fetch error:", err);
       });
   }
 
   // ── Init ──────────────────────────────────────────────────────
+  showDemo();
   fetchData();
   setInterval(fetchData, FETCH_INTERVAL_MS);
   setInterval(updateCountdowns, 1000);
