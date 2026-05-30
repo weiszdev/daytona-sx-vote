@@ -396,7 +396,7 @@
 
   // ── Configuration ─────────────────────────────────────────────
   // Relay URL: set via ?relay= URL parameter, or hardcode a default here.
-  var DEFAULT_RELAY_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+  var DEFAULT_RELAY_URL = "https://script.google.com/macros/s/AKfycbzhbBPXYXS32B7US_to-qjSd8_6sYrzLHP8cJAhHN0VchV7YuOrO8ACdHORq5I64QjN/exec";
   var FETCH_INTERVAL_MS = 5000;
 
   var params = new URLSearchParams(window.location.search);
@@ -588,7 +588,7 @@
 
   // ── Fetch Loop ────────────────────────────────────────────────
   function fetchData() {
-    if (!RELAY_URL || RELAY_URL === "YOUR_APPS_SCRIPT_URL_HERE") {
+    if (!RELAY_URL || RELAY_URL === "https://script.google.com/macros/s/AKfycbzhbBPXYXS32B7US_to-qjSd8_6sYrzLHP8cJAhHN0VchV7YuOrO8ACdHORq5I64QjN/exec") {
       waitingState.querySelector("p").textContent =
         "No relay URL configured. Add ?relay=YOUR_APPS_SCRIPT_URL to this page URL, or set DEFAULT_RELAY_URL in the source.";
       return;

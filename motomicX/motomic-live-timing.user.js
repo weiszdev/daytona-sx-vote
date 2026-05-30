@@ -15,7 +15,7 @@
   // Set RELAY_URL to your deployed Google Apps Script web app URL
   // to relay live timing data to a remote display page.
   // Leave empty to disable relay (opt-in only).
-  const RELAY_URL = "";
+  const RELAY_URL = "https://script.google.com/macros/s/AKfycbzhbBPXYXS32B7US_to-qjSd8_6sYrzLHP8cJAhHN0VchV7YuOrO8ACdHORq5I64QjN/exec";
   const RELAY_INTERVAL_MS = 5000;
 
   const CONFIG = {
