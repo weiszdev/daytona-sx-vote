@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>250 Moto 1 Countdown — MotoMic</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; width: 100%; overflow: hidden; background: #030303; color: #f7f7f7; font-family: Arial, Helvetica, sans-serif; }
+
+  .countdown-wrap {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100vh; width: 100vw; padding: 4vmin;
+    background: radial-gradient(ellipse at center, #1a0000 0%, #030303 70%);
+  }
+
+  .brand { color: #ed1c24; font-size: 5vmin; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1vmin; }
+  .brand span { color: #f7f7f7; }
+
+  .event { color: #9a9a9a; font-size: 3vmin; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1vmin; }
+
+  .class-label {
+    display: inline-block; background: #ed1c24; color: #fff; font-size: 5vmin; font-weight: 900;
+    letter-spacing: 0.1em; padding: 1vmin 4vmin; text-transform: uppercase; margin-bottom: 3vmin;
+  }
+
+  .digits {
+    display: flex; align-items: center; justify-content: center; gap: 2vmin;
+  }
+
+  .block {
+    background: #0b0b0b; border: 0.4vmin solid #ed1c24; border-radius: 1.5vmin;
+    padding: 2vmin 3vmin; min-width: 14vmin; text-align: center;
+    box-shadow: 0 0 3vmin rgba(237, 28, 36, 0.15);
+  }
+
+  .num {
+    font-size: 14vmin; font-weight: 900; line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: #fff; text-shadow: 0 0 2vmin rgba(237, 28, 36, 0.3);
+  }
+
+  .unit {
+    font-size: 2.2vmin; font-weight: 700; color: #9a9a9a;
+    letter-spacing: 0.2em; text-transform: uppercase; margin-top: 0.5vmin;
+  }
+
+  .sep {
+    font-size: 10vmin; font-weight: 900; color: #ed1c24; line-height: 1;
+    animation: pulse 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .live-now {
+    display: none; flex-direction: column; align-items: center; gap: 2vmin;
+  }
+
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 1.5vmin;
+    font-size: 8vmin; font-weight: 900; color: #ed1c24;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    animation: flash 1s ease-in-out infinite;
+  }
+
+  .live-dot {
+    width: 3vmin; height: 3vmin; border-radius: 50%; background: #ed1c24;
+    box-shadow: 0 0 2vmin #ed1c24, 0 0 4vmin #ed1c24;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes flash { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+  .live-sub { color: #9a9a9a; font-size: 4vmin; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; }
+
+  .footer {
+    position: absolute; bottom: 3vmin; width: 100%; text-align: center;
+    color: #555; font-size: 2vmin; font-weight: 700; letter-spacing: 0.1em;
+  }
+  .footer span { color: #ed1c24; }
+</style>
+</head>
+<body>
+<div class="countdown-wrap">
+  <div class="brand">Moto<span>Mic</span></div>
+  <div class="event">Fox Raceway — Pala, CA</div>
+  <div class="class-label">250 Class Moto 1</div>
+
+  <div class="digits" id="digits">
+    <div class="block"><div class="num" id="hrs">00</div><div class="unit">Hours</div></div>
+    <div class="sep">:</div>
+    <div class="block"><div class="num" id="min">00</div><div class="unit">Min</div></div>
+    <div class="sep">:</div>
+    <div class="block"><div class="num" id="sec">00</div><div class="unit">Sec</div></div>
+  </div>
+
+  <div class="live-now" id="live-now">
+    <div class="live-badge"><span class="live-dot"></span> GATE DROP</div>
+    <div class="live-sub">250 Moto 1 is live</div>
+  </div>
+</div>
+
+<div class="footer">Powered by <span>MotoMic</span> &bull; RevMX</div>
+
+<script>
+  // 3:00 PM CST = 3:00 PM Central Standard Time (UTC-6)
+  // But in late May, Central is CDT (UTC-5)
+  // May 30, 2026 3:00 PM CDT = May 30, 2026 20:00 UTC
+  var TARGET = new Date("2026-05-30T15:00:00-05:00");
+
+  var hrs = document.getElementById("hrs");
+  var min = document.getElementById("min");
+  var sec = document.getElementById("sec");
+  var digits = document.getElementById("digits");
+  var liveNow = document.getElementById("live-now");
+
+  function tick() {
+    var diff = TARGET.getTime() - Date.now();
+
+    if (diff <= 0) {
+      digits.style.display = "none";
+      liveNow.style.display = "flex";
+      return;
+    }
+
+    var total = Math.floor(diff / 1000);
+    var h = Math.floor(total / 3600);
+    var m = Math.floor((total % 3600) / 60);
+    var s = total % 60;
+
+    hrs.textContent = String(h).padStart(2, "0");
+    min.textContent = String(m).padStart(2, "0");
+    sec.textContent = String(s).padStart(2, "0");
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
