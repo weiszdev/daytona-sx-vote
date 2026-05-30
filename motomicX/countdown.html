@@ -103,34 +103,73 @@
 <div class="footer">Powered by <span>MotoMic</span></div>
 
 <script>
-  // 3:00 PM CST = 3:00 PM Central Standard Time (UTC-6)
-  // But in late May, Central is CDT (UTC-5)
-  // May 30, 2026 3:00 PM CDT = May 30, 2026 20:00 UTC
-  var TARGET = new Date("2026-05-30T15:00:00-05:00");
+  var MOTOS = [
+    { label: "250 Class Moto 1", time: new Date("2026-05-30T15:00:00-05:00") },
+    { label: "450 Class Moto 1", time: new Date("2026-05-30T16:00:00-05:00") },
+    { label: "250 Class Moto 2", time: new Date("2026-05-30T17:15:00-05:00") },
+    { label: "450 Class Moto 2", time: new Date("2026-05-30T18:15:00-05:00") },
+  ];
 
+  // How long to show "GATE DROP" before moving to the next moto (seconds)
+  var GATE_DROP_DURATION = 120;
+
+  var classLabel = document.querySelector(".class-label");
   var hrs = document.getElementById("hrs");
   var min = document.getElementById("min");
   var sec = document.getElementById("sec");
   var digits = document.getElementById("digits");
   var liveNow = document.getElementById("live-now");
+  var liveSub = liveNow.querySelector(".live-sub");
+  var currentIndex = -1;
 
   function tick() {
-    var diff = TARGET.getTime() - Date.now();
+    var now = Date.now();
 
-    if (diff <= 0) {
+    // Find the current or next moto
+    var active = null;
+    for (var i = 0; i < MOTOS.length; i++) {
+      var diff = MOTOS[i].time.getTime() - now;
+      if (diff > 0) {
+        // Upcoming — show countdown
+        active = { index: i, diff: diff, live: false };
+        break;
+      } else if (diff > -(GATE_DROP_DURATION * 1000)) {
+        // Just started — show gate drop
+        active = { index: i, diff: 0, live: true };
+        break;
+      }
+    }
+
+    if (!active) {
+      // All motos done
       digits.style.display = "none";
       liveNow.style.display = "flex";
+      classLabel.textContent = "Race Day Complete";
+      liveSub.textContent = "See you next round";
+      liveNow.querySelector(".live-badge").innerHTML = '<span class="live-dot"></span> CHECKERED FLAG';
       return;
     }
 
-    var total = Math.floor(diff / 1000);
-    var h = Math.floor(total / 3600);
-    var m = Math.floor((total % 3600) / 60);
-    var s = total % 60;
+    var moto = MOTOS[active.index];
+    classLabel.textContent = moto.label;
 
-    hrs.textContent = String(h).padStart(2, "0");
-    min.textContent = String(m).padStart(2, "0");
-    sec.textContent = String(s).padStart(2, "0");
+    if (active.live) {
+      digits.style.display = "none";
+      liveNow.style.display = "flex";
+      liveSub.textContent = moto.label + " is live";
+    } else {
+      digits.style.display = "flex";
+      liveNow.style.display = "none";
+
+      var total = Math.floor(active.diff / 1000);
+      var h = Math.floor(total / 3600);
+      var m = Math.floor((total % 3600) / 60);
+      var s = total % 60;
+
+      hrs.textContent = String(h).padStart(2, "0");
+      min.textContent = String(m).padStart(2, "0");
+      sec.textContent = String(s).padStart(2, "0");
+    }
   }
 
   tick();
