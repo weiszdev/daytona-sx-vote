@@ -11,6 +11,13 @@
 (function () {
   "use strict";
 
+  // ── Data Relay ──────────────────────────────────────────────────
+  // Set RELAY_URL to your deployed Google Apps Script web app URL
+  // to relay live timing data to a remote display page.
+  // Leave empty to disable relay (opt-in only).
+  const RELAY_URL = "";
+  const RELAY_INTERVAL_MS = 5000;
+
   const CONFIG = {
     // Options: "two-column", "compact-table"
     brandName: "MotoMic",
@@ -824,8 +831,42 @@
     if (hasSourceUpdate) scheduleReformat();
   });
 
+  // ── Data Relay ──────────────────────────────────────────────────
+  function relayData() {
+    if (!RELAY_URL) return;
+
+    const riders = readRiders();
+    if (riders.length === 0) return;
+
+    const payload = JSON.stringify({
+      riders: riders,
+      eventTitle: readEventTitle(),
+      clock: readClock(),
+      timestamp: new Date().toISOString(),
+    });
+
+    try {
+      const blob = new Blob([payload], { type: "application/json" });
+      const sent = navigator.sendBeacon(RELAY_URL, blob);
+      if (!sent) {
+        fetch(RELAY_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: payload,
+        }).catch(() => {});
+      }
+    } catch (e) {
+      // Silently fail — relay is best-effort
+    }
+  }
+
   reformatBikeCells();
   window.setInterval(updateCountdowns, 1000);
+  if (RELAY_URL) {
+    relayData();
+    window.setInterval(relayData, RELAY_INTERVAL_MS);
+  }
   observer.observe(document.documentElement, {
     childList: true,
     subtree: true,

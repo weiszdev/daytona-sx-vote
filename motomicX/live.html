@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MotoMic LIVE — Real-Time Timing</title>
+<meta name="description" content="MotoMic Live Timing — real-time relay display for Supercross and Pro Motocross." />
+<style>
+  :root {
+    --bg: #030303;
+    --panel: #0b0b0b;
+    --panel-alt: #151515;
+    --red: #ed1c24;
+    --white: #f7f7f7;
+    --muted: #9a9a9a;
+    --dim: #555;
+    --line: #2a2a2a;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --honda: #ed1c24;
+    --gasgas: #ed1c24;
+    --husqvarna: #2f65b0;
+    --kawasaki: #69be28;
+    --ktm: #ff6600;
+    --triumph: #d7d7d7;
+    --yamaha: #0057b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.4;
+    min-height: 100vh;
+  }
+
+  /* STATUS BAR */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 16px;
+    background: var(--panel);
+    border-bottom: 2px solid var(--line);
+    font-size: 0.8rem;
+    font-weight: 700;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .status-bar .brand {
+    color: var(--red);
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .status-bar .brand span { color: var(--white); }
+  .status-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .badge-live {
+    background: var(--green);
+    color: #000;
+    animation: pulse-live 2s ease-in-out infinite;
+  }
+  .badge-stale {
+    background: var(--amber);
+    color: #000;
+  }
+  .badge-waiting {
+    background: var(--dim);
+    color: var(--white);
+  }
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  @keyframes pulse-live {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .last-updated {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  /* WAITING STATE */
+  .waiting-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 16px;
+    text-align: center;
+    padding: 32px 20px;
+  }
+  .waiting-state h2 {
+    color: var(--white);
+    font-size: 1.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+  .waiting-state h2 span { color: var(--red); }
+  .waiting-state p { color: var(--muted); max-width: 500px; font-size: 0.95rem; }
+  .waiting-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--line);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* BOARD */
+  .motomic-board {
+    width: min(100%, 1920px);
+    margin: 0 auto;
+    padding: 0.65rem;
+    background: var(--bg);
+  }
+  .motomic-board-title {
+    display: grid;
+    grid-template-columns: auto minmax(0,1fr) auto;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 0.55rem;
+    border-bottom: 3px solid var(--red);
+    padding-bottom: 0.35rem;
+    text-transform: uppercase;
+  }
+  .motomic-brand-title {
+    color: var(--red);
+    font-size: clamp(19px,1.8vw,36px);
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .motomic-title-main {
+    overflow: hidden;
+    color: var(--white);
+    font-size: clamp(17px,1.5vw,30px);
+    font-weight: 900;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .motomic-title-side {
+    color: var(--red);
+    font-size: clamp(15px,1.2vw,24px);
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .motomic-next-race {
+    display: inline-flex;
+    align-items: baseline;
+    min-width: 0;
+    max-width: 28rem;
+    gap: 0.35rem;
+    overflow: hidden;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .motomic-next-label {
+    color: var(--red);
+    font-size: clamp(10px,0.7vw,14px);
+    font-weight: 900;
+    flex: 0 0 auto;
+  }
+  .motomic-next-session {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--white);
+    font-size: clamp(12px,0.95vw,18px);
+    font-weight: 900;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .motomic-next-countdown {
+    color: var(--red);
+    font-size: clamp(12px,0.9vw,17px);
+    font-weight: 900;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .motomic-moto-countdowns {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    min-width: max-content;
+    white-space: nowrap;
+  }
+  .motomic-moto-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    border: 2px solid currentColor;
+    padding: 0.18rem 0.4rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .motomic-moto-chip.is-250 { color: var(--red); }
+  .motomic-moto-chip.is-250 .motomic-moto-label { color: var(--white); }
+  .motomic-moto-chip.is-450 { color: #fff; background: var(--red); border-color: var(--red); }
+  .motomic-moto-label { font-size: clamp(13px,0.95vw,18px); }
+  .motomic-moto-time {
+    font-size: clamp(14px,1.05vw,20px);
+    font-variant-numeric: tabular-nums;
+  }
+  .motomic-moto-chip.is-250 .motomic-moto-time,
+  .motomic-moto-chip.is-450 .motomic-moto-time {
+    border: 2px solid var(--red);
+    padding: 0.12rem 0.35rem;
+    background: var(--bg);
+    color: var(--white);
+  }
+  .motomic-right-strip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.85rem;
+    min-width: 0;
+  }
+  .motomic-columns {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(300px,33vw) minmax(0,1fr);
+    gap: 0.75rem;
+  }
+  .motomic-content {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 0.7rem;
+  }
+  .motomic-video-slot {
+    display: grid;
+    align-self: start;
+    grid-template-columns: 1fr;
+    align-items: center;
+    border: 3px solid var(--red);
+    padding: 0.45rem;
+    background: var(--panel);
+  }
+  .motomic-video-frame {
+    aspect-ratio: 16/9;
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    background: linear-gradient(135deg, rgba(237,28,36,0.22), transparent 34%), #050505;
+    color: var(--dim);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .motomic-column { display: grid; align-content: start; gap: 0.18rem; }
+  .motomic-row {
+    display: grid;
+    grid-template-columns: 2.65em 3.25em minmax(5em,1fr) 4.9em 4.15em 4.15em 4.15em;
+    align-items: center;
+    min-height: 1.85rem;
+    column-gap: 0.24rem;
+    row-gap: 0;
+    border-left: 4px solid transparent;
+    padding: 0.12rem 0.45rem;
+    background: var(--panel);
+    font-size: clamp(14px,1vw,21px);
+    font-weight: 800;
+    line-height: 1;
+  }
+  .motomic-row:nth-child(even) { background: var(--panel-alt); }
+  .motomic-row span { min-width: 0; }
+  .motomic-header {
+    min-height: 1.35rem;
+    border-left-color: var(--red);
+    background: transparent;
+    color: var(--muted);
+    font-size: clamp(11px,0.72vw,15px);
+    text-transform: uppercase;
+  }
+  .motomic-pos { color: var(--red); font-weight: 900; }
+  .motomic-number { padding-left: 0.35rem; }
+  .motomic-name {
+    overflow: hidden;
+    padding-right: 0.1rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .motomic-bike {
+    font-size: 0.88em;
+    font-weight: 900;
+    text-transform: uppercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .motomic-time, .motomic-gap {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  @media (max-width: 900px) {
+    .motomic-board-title, .motomic-columns { grid-template-columns: 1fr; }
+    .motomic-video-slot { display: none; }
+    .motomic-row {
+      grid-template-columns: 2.2em 2.8em minmax(4em,1fr) 3.8em 4em 4em 3.8em;
+      font-size: clamp(12px, 2.8vw, 16px);
+      padding: 0.1rem 0.3rem;
+    }
+    .motomic-header { font-size: clamp(9px, 2vw, 12px); }
+    .status-bar { padding: 4px 10px; font-size: 0.7rem; }
+    .motomic-board { padding: 0.35rem; }
+    .motomic-board-title { gap: 0.4rem; margin-bottom: 0.35rem; }
+    .motomic-right-strip { flex-wrap: wrap; gap: 0.4rem; }
+  }
+  @media (min-width:901px) and (max-width:1450px) {
+    .motomic-board-title { grid-template-columns: auto minmax(0,1fr); }
+    .motomic-right-strip { grid-column: 2/-1; grid-row: 2; justify-content: flex-start; }
+    .motomic-columns { grid-template-columns: minmax(0,1fr) minmax(260px,32vw) minmax(0,1fr); gap: 0.45rem; }
+    .motomic-row { column-gap: 0.18rem; padding-inline: 0.32rem; font-size: clamp(13px,0.88vw,18px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="brand">Moto<span>Mic</span> LIVE</div>
+  <div class="status-info">
+    <span class="badge badge-waiting" id="status-badge">
+      <span class="badge-dot"></span> Waiting
+    </span>
+    <span class="last-updated" id="last-updated"></span>
+  </div>
+</div>
+
+<!-- WAITING STATE (shown until first data arrives) -->
+<div class="waiting-state" id="waiting-state">
+  <div class="waiting-spinner"></div>
+  <h2><span>MotoMic</span> Live Timing</h2>
+  <p>Waiting for data from the relay endpoint. Make sure the Tampermonkey userscript is running on live.supercrosslive.com with the relay enabled.</p>
+</div>
+
+<!-- BOARD (hidden until data arrives) -->
+<main class="motomic-board" id="motomic-board" style="display:none">
+  <header class="motomic-board-title">
+    <div class="motomic-brand-title">MotoMic</div>
+    <div class="motomic-title-main" id="event-title">Live Timing</div>
+    <div class="motomic-right-strip">
+      <div class="motomic-next-race">
+        <span class="motomic-next-label">Next Race:</span>
+        <div class="motomic-next-session" id="next-session"></div>
+        <div class="motomic-next-countdown" id="next-countdown"></div>
+      </div>
+      <div class="motomic-moto-countdowns">
+        <div class="motomic-moto-chip is-250">
+          <span class="motomic-moto-label">250 Moto 1</span>
+          <span class="motomic-moto-time" id="countdown-250"></span>
+        </div>
+        <div class="motomic-moto-chip is-450">
+          <span class="motomic-moto-label">450 Moto 1</span>
+          <span class="motomic-moto-time" id="countdown-450"></span>
+        </div>
+      </div>
+    </div>
+    <div class="motomic-title-side" id="clock"></div>
+  </header>
+  <section class="motomic-content">
+    <section class="motomic-columns" id="board-columns">
+      <div class="motomic-column" id="col-left"></div>
+      <section class="motomic-video-slot"><div class="motomic-video-frame"></div></section>
+      <div class="motomic-column" id="col-right"></div>
+    </section>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  // ── Configuration ─────────────────────────────────────────────
+  // Relay URL: set via ?relay= URL parameter, or hardcode a default here.
+  var DEFAULT_RELAY_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+  var FETCH_INTERVAL_MS = 5000;
+
+  var params = new URLSearchParams(window.location.search);
+  var RELAY_URL = params.get("relay") || DEFAULT_RELAY_URL;
+
+  // ── Fox Raceway Schedule ──────────────────────────────────────
+  var EVENT_SCHEDULE = [
+    ["2026-05-30T08:00:00-07:00", "250 Class Qualifying Grp B"],
+    ["2026-05-30T08:20:00-07:00", "250 Class Qualifying Grp A"],
+    ["2026-05-30T08:35:00-07:00", "Track Maintenance"],
+    ["2026-05-30T08:50:00-07:00", "450 Class Qualifying Grp A"],
+    ["2026-05-30T09:10:00-07:00", "450 Class Qualifying Grp B"],
+    ["2026-05-30T09:30:00-07:00", "Track Maintenance"],
+    ["2026-05-30T09:50:00-07:00", "250 Class Qualifying Grp B"],
+    ["2026-05-30T10:10:00-07:00", "250 Class Qualifying Grp A"],
+    ["2026-05-30T10:30:00-07:00", "450 Class Qualifying Grp A"],
+    ["2026-05-30T10:50:00-07:00", "450 Class Qualifying Grp B"],
+    ["2026-05-30T11:05:00-07:00", "Track Maintenance"],
+    ["2026-05-30T11:35:00-07:00", "250 Consolation Race"],
+    ["2026-05-30T11:50:00-07:00", "450 Consolation Race"],
+    ["2026-05-30T12:05:00-07:00", "Track Maintenance"],
+    ["2026-05-30T12:15:00-07:00", "Opening Ceremonies"],
+    ["2026-05-30T13:00:00-07:00", "250 Class Sight Lap"],
+    ["2026-05-30T13:15:00-07:00", "250 Class Moto #1"],
+    ["2026-05-30T14:00:00-07:00", "450 Class Sight Lap"],
+    ["2026-05-30T14:15:00-07:00", "450 Class Moto #1"],
+    ["2026-05-30T14:50:00-07:00", "Halftime"],
+    ["2026-05-30T15:20:00-07:00", "250 Class Sight Lap"],
+    ["2026-05-30T15:30:00-07:00", "250 Class Moto #2"],
+    ["2026-05-30T16:05:00-07:00", "250 Winners Circle"],
+    ["2026-05-30T16:22:00-07:00", "450 Class Sight Lap"],
+    ["2026-05-30T16:30:00-07:00", "450 Class Moto #2"],
+    ["2026-05-30T17:05:00-07:00", "450 Winners Circle"],
+  ].map(function (item) {
+    return { session: item[1], startTime: new Date(item[0]) };
+  });
+
+  // ── Brand Colors ──────────────────────────────────────────────
+  var BRAND_COLORS = {
+    beta: "var(--honda)",
+    ducati: "var(--honda)",
+    gasgas: "var(--gasgas)",
+    honda: "var(--honda)",
+    husqvarna: "var(--husqvarna)",
+    kawasaki: "var(--kawasaki)",
+    ktm: "var(--ktm)",
+    suzuki: "#f5d300",
+    triumph: "var(--triumph)",
+    yamaha: "var(--yamaha)",
+  };
+
+  // ── DOM refs ──────────────────────────────────────────────────
+  var waitingState = document.getElementById("waiting-state");
+  var boardEl = document.getElementById("motomic-board");
+  var eventTitleEl = document.getElementById("event-title");
+  var clockEl = document.getElementById("clock");
+  var colLeft = document.getElementById("col-left");
+  var colRight = document.getElementById("col-right");
+  var statusBadge = document.getElementById("status-badge");
+  var lastUpdatedEl = document.getElementById("last-updated");
+  var nextSessionEl = document.getElementById("next-session");
+  var nextCountdownEl = document.getElementById("next-countdown");
+  var countdown250 = document.getElementById("countdown-250");
+  var countdown450 = document.getElementById("countdown-450");
+
+  var lastDataTimestamp = null;
+  var hasData = false;
+
+  // ── Helpers ───────────────────────────────────────────────────
+  function formatCountdown(startTime) {
+    if (!startTime) return "TBD";
+    var diffMs = startTime.getTime() - Date.now();
+    if (diffMs <= 0) return "Starting Now";
+    var totalSeconds = Math.floor(diffMs / 1000);
+    var h = Math.floor(totalSeconds / 3600);
+    var m = Math.floor((totalSeconds % 3600) / 60);
+    var s = totalSeconds % 60;
+    if (h > 0) return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    return m + ":" + String(s).padStart(2, "0");
+  }
+
+  function detectNextRace() {
+    var now = Date.now();
+    for (var i = 0; i < EVENT_SCHEDULE.length; i++) {
+      if (EVENT_SCHEDULE[i].startTime.getTime() > now) return EVENT_SCHEDULE[i];
+    }
+    return { session: "Schedule Complete", startTime: null };
+  }
+
+  function findSession(name) {
+    for (var i = 0; i < EVENT_SCHEDULE.length; i++) {
+      if (EVENT_SCHEDULE[i].session === name) return EVENT_SCHEDULE[i];
+    }
+    return null;
+  }
+
+  function updateCountdowns() {
+    var next = detectNextRace();
+    nextSessionEl.textContent = next.session;
+    nextCountdownEl.textContent = formatCountdown(next.startTime);
+
+    var s250 = findSession("250 Class Moto #1");
+    var s450 = findSession("450 Class Moto #1");
+    countdown250.textContent = s250 ? formatCountdown(s250.startTime) : "TBD";
+    countdown450.textContent = s450 ? formatCountdown(s450.startTime) : "TBD";
+  }
+
+  function secondsAgo(isoString) {
+    if (!isoString) return Infinity;
+    return Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
+  }
+
+  function updateStatusBadge() {
+    var ago = secondsAgo(lastDataTimestamp);
+    if (!hasData || ago === Infinity) {
+      statusBadge.className = "badge badge-waiting";
+      statusBadge.innerHTML = '<span class="badge-dot"></span> Waiting';
+      lastUpdatedEl.textContent = "";
+    } else if (ago < 15) {
+      statusBadge.className = "badge badge-live";
+      statusBadge.innerHTML = '<span class="badge-dot"></span> LIVE';
+      lastUpdatedEl.textContent = "Updated " + ago + "s ago";
+    } else if (ago < 30) {
+      statusBadge.className = "badge badge-live";
+      statusBadge.innerHTML = '<span class="badge-dot"></span> LIVE';
+      lastUpdatedEl.textContent = "Updated " + ago + "s ago";
+    } else {
+      statusBadge.className = "badge badge-stale";
+      statusBadge.innerHTML = '<span class="badge-dot"></span> STALE';
+      lastUpdatedEl.textContent = "Last update " + ago + "s ago";
+    }
+  }
+
+  // ── Render Board ──────────────────────────────────────────────
+  function makeRow(rider, isHeader) {
+    var row = document.createElement("div");
+    row.className = isHeader ? "motomic-row motomic-header" : "motomic-row";
+    if (isHeader) {
+      row.innerHTML =
+        "<span>Pos</span><span>#</span><span>Rider</span><span>Bike</span><span>Last</span><span>Best</span><span>Gap</span>";
+    } else {
+      var bikeColor = BRAND_COLORS[rider.bikeBrand] || "var(--white)";
+      row.innerHTML =
+        '<span class="motomic-pos">' + (rider.pos || "") + "</span>" +
+        '<span class="motomic-number">' + (rider.number || "") + "</span>" +
+        '<span class="motomic-name">' + (rider.name || "") + "</span>" +
+        '<span class="motomic-bike" style="color:' + bikeColor + '">' + (rider.bike || "") + "</span>" +
+        '<span class="motomic-time">' + (rider.last || "") + "</span>" +
+        '<span class="motomic-time">' + (rider.best || "") + "</span>" +
+        '<span class="motomic-gap">' + (rider.gap || "") + "</span>";
+    }
+    return row;
+  }
+
+  function renderRiders(riders) {
+    colLeft.innerHTML = "";
+    colRight.innerHTML = "";
+
+    var half = Math.ceil(riders.length / 2);
+    var leftRiders = riders.slice(0, half);
+    var rightRiders = riders.slice(half);
+
+    colLeft.appendChild(makeRow(null, true));
+    for (var i = 0; i < leftRiders.length; i++) {
+      colLeft.appendChild(makeRow(leftRiders[i], false));
+    }
+
+    colRight.appendChild(makeRow(null, true));
+    for (var j = 0; j < rightRiders.length; j++) {
+      colRight.appendChild(makeRow(rightRiders[j], false));
+    }
+  }
+
+  function applyData(data) {
+    if (!data || !data.riders || data.riders.length === 0) return;
+
+    hasData = true;
+    lastDataTimestamp = data.lastUpdated || data.timestamp;
+
+    waitingState.style.display = "none";
+    boardEl.style.display = "block";
+
+    eventTitleEl.textContent = data.eventTitle || "Live Timing";
+    clockEl.textContent = data.clock || "";
+
+    renderRiders(data.riders);
+    updateStatusBadge();
+  }
+
+  // ── Fetch Loop ────────────────────────────────────────────────
+  function fetchData() {
+    if (!RELAY_URL || RELAY_URL === "YOUR_APPS_SCRIPT_URL_HERE") {
+      waitingState.querySelector("p").textContent =
+        "No relay URL configured. Add ?relay=YOUR_APPS_SCRIPT_URL to this page URL, or set DEFAULT_RELAY_URL in the source.";
+      return;
+    }
+
+    fetch(RELAY_URL)
+      .then(function (res) { return res.json(); })
+      .then(function (data) { applyData(data); })
+      .catch(function (err) {
+        console.warn("[MotoMic LIVE] Fetch error:", err);
+      });
+  }
+
+  // ── Init ──────────────────────────────────────────────────────
+  fetchData();
+  setInterval(fetchData, FETCH_INTERVAL_MS);
+  setInterval(updateCountdowns, 1000);
+  setInterval(updateStatusBadge, 1000);
+  updateCountdowns();
+})();
+</script>
+</body>
+</html>
