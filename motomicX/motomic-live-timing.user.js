@@ -1,11 +1,15 @@
 // ==UserScript==
 // @name         MotoMic Live Timing
 // @namespace    local.motomic
-// @version      0.2.0
+// @version      0.3.0
 // @description  Reformat Supercross Live with MotoMic colors, text bike brands, and a dense two-column leaderboard.
 // @match        https://live.supercrosslive.com/*
+// @match        https://*.supercrosslive.com/*
+// @match        https://*.feld-entertainment.com/*
+// @match        https://*.motosport*.com/*
 // @run-at       document-idle
 // @grant        none
+// @noframes     false
 // ==/UserScript==
 
 (function () {
